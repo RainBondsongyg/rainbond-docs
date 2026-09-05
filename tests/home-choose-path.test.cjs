@@ -47,6 +47,24 @@ test('home AI private deployment card covers custom AI apps, Dify-like apps, and
   );
 });
 
+test('home AI development deployment card links to the RainSkills topic page', () => {
+  [
+    "tag: 'AI Agent'",
+    "title: 'AI 开发部署应用'",
+    "href: '/rainskills'",
+    'Claude Code、Codex 等 AI Agent',
+    '项目部署、失败排查和交付验证',
+  ].forEach(copy => assert.ok(
+    choosePathSource.includes(copy),
+    `Expected RainSkills homepage entry: ${copy}`
+  ));
+
+  assert.ok(
+    !choosePathSource.includes("title: '不会 K8s，想把应用跑起来'"),
+    'Expected the previous Kubernetes beginner card to be replaced.'
+  );
+});
+
 test('home path card titles use desktop no-wrap styling with mobile fallback', () => {
   assert.ok(
     /\.cardTitle\s*\{[\s\S]*white-space:\s*nowrap;/.test(choosePathStyles),

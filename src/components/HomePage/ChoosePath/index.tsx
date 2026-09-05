@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import styles from './styles.module.css';
 import TrackedLink from '@src/components/Analytics/TrackedLink';
 
-type CardTone = 'beginner' | 'ai' | 'offline' | 'enterprise';
+type CardTone = 'agent' | 'ai' | 'offline' | 'enterprise';
 
 interface PathCard {
   tag: string;
@@ -19,12 +19,11 @@ interface PathCard {
 
 const pathCards: PathCard[] = [
   {
-    tag: '快速上手',
-    title: '不会 K8s，想把应用跑起来',
-    summary: '适合开发多、平台运维少，想先解决应用交付而不是先补齐 k8s 复杂概念。',
-    href: '/install-hub',
-    tone: 'beginner',
-    showCta: false,
+    tag: 'AI Agent',
+    title: 'AI 开发部署应用',
+    summary: '使用 Claude Code、Codex 等 AI Agent 完成项目部署、失败排查和交付验证。',
+    href: '/rainskills',
+    tone: 'agent',
   },
   {
     tag: 'AI 私有化',

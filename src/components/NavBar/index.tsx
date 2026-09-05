@@ -19,6 +19,10 @@ const learningSections = [
     title: '专题',
     items: [
       {
+        label: 'AI Agent 部署应用',
+        to: '/rainskills',
+      },
+      {
         label: '容器平台选型中心',
         to: '/compare',
       },
