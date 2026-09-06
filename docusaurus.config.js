@@ -144,6 +144,11 @@ const config = {
                 title: '专题',
                 items: [
                   {
+                    label: 'AI Agent 部署应用',
+                    to: '/rainskills',
+                    activeBasePath: '/rainskills',
+                  },
+                  {
                     label: '容器平台选型中心',
                     to: '/compare',
                     activeBasePath: '/compare',
@@ -368,9 +373,25 @@ const config = {
       },
     ],
     [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'rainskills',
+        path: 'rainskills',
+        routeBasePath: 'rainskills',
+        sidebarPath: require.resolve('./rainskillsSidebar.js'),
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: false,
+        editUrl: 'https://github.com/goodrain/rainbond-docs/tree/main',
+      },
+    ],
+    [
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [
+          {
+            to: '/rainskills',
+            from: '/solutions/rainskills',
+          },
           {
             to: '/solutions/ai-private-deployment',
             from: '/ai-private-deployment',

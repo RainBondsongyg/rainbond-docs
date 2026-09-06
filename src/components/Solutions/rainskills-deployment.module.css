@@ -1,0 +1,430 @@
+.sectionBlock {
+  margin: 4.5rem 0;
+}
+
+.sectionHead {
+  max-width: 820px;
+  margin-bottom: 1.5rem;
+}
+
+.kicker {
+  display: inline-flex;
+  margin-bottom: 0.7rem;
+  color: #005ce6;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.sectionHead h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.sectionHead p {
+  margin: 0.75rem 0 0;
+  color: #526077;
+  font-size: 1rem;
+  line-height: 1.78;
+}
+
+.problemGrid,
+.capabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.problemCard {
+  display: grid;
+  grid-template-columns: 2.7rem minmax(0, 1fr);
+  gap: 0.9rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffffff 0%, #f6f9ff 100%);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.055);
+}
+
+.cardNo,
+.workflowNo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 12px;
+  background: #0b6bff;
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.problemCard h3,
+.capabilityCard h3,
+.agentCard h3,
+.workflowStep h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.problemCard p,
+.capabilityCard p,
+.agentCard p,
+.workflowStep p {
+  margin: 0.45rem 0 0;
+  color: #526077;
+  line-height: 1.7;
+}
+
+.workflow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workflowStep {
+  position: relative;
+  min-height: 205px;
+  padding: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: #fff;
+}
+
+.workflowStep::before {
+  position: absolute;
+  inset: auto -30% -55% 25%;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.06);
+  content: '';
+}
+
+.workflowStep:not(:last-child)::after {
+  position: absolute;
+  z-index: 2;
+  top: 2.05rem;
+  right: -0.55rem;
+  width: 0.7rem;
+  height: 2px;
+  background: #8ebcff;
+  content: '';
+}
+
+.workflowStep h3 {
+  position: relative;
+  margin-top: 0.9rem;
+}
+
+.workflowStep p {
+  position: relative;
+  font-size: 0.92rem;
+}
+
+.deployScreenshot {
+  margin-top: 1rem;
+  overflow: hidden;
+  border: 1px solid #25324a;
+  border-radius: 22px;
+  background: #171717;
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.18);
+}
+
+.deployScreenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.agentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.agentCard {
+  padding: 1.25rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+.agentCard img {
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1rem;
+  padding: 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 15px;
+  background: #f7f9fc;
+}
+
+.capabilityCard {
+  padding: 1.3rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+.capabilityCard > span {
+  display: inline-flex;
+  margin-bottom: 0.65rem;
+  color: #005ce6;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+
+.capabilityCard ul {
+  margin: 0.85rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.capabilityCard li {
+  color: #334155;
+  line-height: 1.65;
+}
+
+.capabilityCard li + li {
+  margin-top: 0.35rem;
+}
+
+.tablePanel {
+  overflow-x: auto;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.055);
+}
+
+.tablePanel table {
+  display: table;
+  width: 100%;
+  min-width: 760px;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.tablePanel th,
+.tablePanel td {
+  padding: 0.9rem 1rem;
+  border-color: rgba(15, 23, 42, 0.08);
+  vertical-align: top;
+  line-height: 1.65;
+}
+
+.tablePanel th {
+  background: #eff6ff;
+  color: #0f172a;
+  font-weight: 780;
+  text-align: left;
+}
+
+.tablePanel td {
+  color: #526077;
+}
+
+.tablePanel td:first-child {
+  color: #0f172a;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.openSourcePanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #25324a;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 86% 20%, rgba(37, 99, 235, 0.22), transparent 32%),
+    #0d1424;
+  color: #fff;
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.16);
+}
+
+.openSourcePanel strong {
+  display: block;
+  margin-bottom: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.openSourcePanel code {
+  display: block;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #dbeafe;
+  white-space: normal;
+}
+
+.openSourceActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.primaryLink,
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 1rem;
+  border-radius: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.primaryLink {
+  background: #2979ff;
+  color: #fff;
+}
+
+.secondaryLink {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.primaryLink:hover,
+.secondaryLink:hover {
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.primaryLink:focus-visible,
+.secondaryLink:focus-visible,
+.faqItem summary:focus-visible {
+  outline: 3px solid rgba(96, 165, 250, 0.65);
+  outline-offset: 3px;
+}
+
+.faqList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.faqItem {
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.04);
+}
+
+.faqItem summary {
+  position: relative;
+  min-height: 60px;
+  padding: 1rem 3.2rem 1rem 1rem;
+  color: #0f172a;
+  cursor: pointer;
+  font-weight: 730;
+  line-height: 1.55;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #005ce6;
+  content: '+';
+  transform: translateY(-50%);
+}
+
+.faqItem[open] summary {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  background: #f8fbff;
+}
+
+.faqItem[open] summary::after {
+  content: '−';
+}
+
+.faqItem p {
+  margin: 0;
+  padding: 1rem;
+  color: #526077;
+  line-height: 1.75;
+}
+
+@media (max-width: 996px) {
+  .workflow,
+  .agentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflowStep {
+    min-height: 0;
+  }
+
+  .workflowStep:not(:last-child)::after {
+    display: none;
+  }
+
+  .openSourcePanel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .sectionBlock {
+    margin: 3.25rem 0;
+  }
+
+  .problemGrid,
+  .capabilityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .problemCard,
+  .capabilityCard,
+  .agentCard,
+  .openSourcePanel {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .deployScreenshot {
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryLink,
+  .secondaryLink {
+    transition: none;
+  }
+}

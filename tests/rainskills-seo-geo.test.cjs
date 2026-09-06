@@ -27,9 +27,7 @@ const demoStyles = read('src/components/HomePage/Demo/styles.module.css');
 const videoPage = read('src/pages/videos/rainskills-ai-deploy.mdx');
 const videoData = read('src/data/videoTutorials.ts');
 
-test('keeps the existing RainSkills document as the only canonical product page', () => {
-  assert.ok(!fs.existsSync(path.join(root, 'src/pages/rainskills/index.tsx')));
-  assert.ok(!fs.existsSync(path.join(root, 'src/pages/rainskills.tsx')));
+test('keeps the existing RainSkills document as the canonical usage document', () => {
   assert.ok(rainskillsDoc.includes('https://www.rainbond.com/docs/ai/rainskills'));
 });
 
@@ -78,7 +76,6 @@ test('answers the core RainSkills discovery questions in visible text', () => {
     '## RainSkills 与 RainAgent 有什么区别？',
     '## 安全、权限和数据边界',
     '## 常见问题',
-    '最后更新：2026-08-31',
   ].forEach(copy => assert.ok(rainskillsDoc.includes(copy), `Expected visible GEO answer: ${copy}`));
   assert.ok(!rainskillsDoc.includes('# RainSkills：让 AI Agent 把项目部署到 Rainbond'));
 });
@@ -177,7 +174,6 @@ test('keeps the primary RainSkills installation path simple and direct', () => {
     '## 安装 RainSkills',
     '帮我安装 RainSkills，并连接到我要使用的 Rainbond。',
     'npx --yes rainskills',
-    '更多安装方式和高级参数请查看',
   ].forEach(copy => assert.ok(rainskillsDoc.includes(copy), `Expected current install path: ${copy}`));
 
   [

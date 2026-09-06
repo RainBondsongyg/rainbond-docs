@@ -3,6 +3,7 @@ import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 import axios from 'axios';
 import { IconGithubLogo } from '@douyinfe/semi-icons';
+import OverlayTrigger from 'react-bootstrap/esm/OverlayTrigger';
 
 const learningSections = [
   {
@@ -17,6 +18,10 @@ const learningSections = [
   {
     title: '专题',
     items: [
+      {
+        label: 'AI Agent 部署应用',
+        to: '/rainskills',
+      },
       {
         label: '容器平台选型中心',
         to: '/compare',
@@ -125,6 +130,40 @@ export default function Navbar() {
 
         {/* 右侧区域 */}
         <div className={styles.navbarRight}>
+          <OverlayTrigger
+            placement="bottom"
+            container={typeof document !== 'undefined' ? document.body : undefined}
+            popperConfig={{ strategy: 'fixed' }}
+            overlay={(overlayProps) => (
+              <div
+                {...overlayProps}
+                className={styles.wechatOverlay}
+                style={{ ...overlayProps.style, zIndex: 9999 }}
+              >
+                <div className="card">
+                  <div className="card__body">
+                    <img width={200} height={201} src="/wechat/rainbond-xzs.png" alt="Rainbond 微信交流群二维码" />
+                  </div>
+                </div>
+              </div>
+            )}
+          >
+            <button
+              type="button"
+              className={`${styles.github_button} ${styles.communityButton}`}
+              aria-label="查看 Rainbond 微信交流群二维码"
+              title="加入 Rainbond 微信交流群"
+            >
+              <img
+                src="/img/homepage/svg/wechat.svg"
+                className={styles.communityIcon}
+                alt=""
+                width={28}
+                height={28}
+                aria-hidden="true"
+              />
+            </button>
+          </OverlayTrigger>
           <a
             href="https://github.com/goodrain/rainbond"
             target="_blank"
