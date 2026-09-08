@@ -173,6 +173,65 @@
   background: #f7f9fc;
 }
 
+.guideGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.guideCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 150px;
+  padding: 1.25rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffffff 0%, #f6f9ff 100%);
+  color: #0f172a;
+  text-decoration: none;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.guideCard:hover {
+  border-color: rgba(37, 99, 235, 0.34);
+  color: #0f172a;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.1);
+}
+
+.guideCard:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.4);
+  outline-offset: 3px;
+}
+
+.guideCard h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
+.guideCard p {
+  margin: 0.5rem 0 0;
+  color: #526077;
+  line-height: 1.68;
+}
+
+.guideCard > span {
+  flex: 0 0 auto;
+  color: #0b6bff;
+  font-size: 1.35rem;
+  transition: transform 180ms ease;
+}
+
+.guideCard:hover > span {
+  transform: translateX(3px);
+}
+
 .capabilityCard {
   padding: 1.3rem;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -382,7 +441,8 @@
 
 @media (max-width: 996px) {
   .workflow,
-  .agentGrid {
+  .agentGrid,
+  .guideGrid {
     grid-template-columns: 1fr;
   }
 
@@ -412,6 +472,7 @@
   .problemCard,
   .capabilityCard,
   .agentCard,
+  .guideCard,
   .openSourcePanel {
     padding: 1rem;
     border-radius: 18px;
@@ -424,7 +485,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .primaryLink,
-  .secondaryLink {
+  .secondaryLink,
+  .guideCard,
+  .guideCard > span {
     transition: none;
   }
 }

@@ -273,7 +273,7 @@ export default function AiPrivateDeployment(): JSX.Element {
         <meta name="description" content={pageDescription} />
         <meta
           name="keywords"
-          content="AI 应用私有化部署,大模型私有化部署,企业 AI 私有化平台,Dify 私有化部署,大模型部署平台,OpenAI 兼容接口,GPU 模型部署,RainAgent,RainSkills,Rainbond 大模型"
+          content="AI应用私有化部署,AI应用部署到自己的服务器,企业AI应用私有化,AI应用内网部署,AI应用离线部署,大模型私有化部署,AI应用栈私有化部署,信创AI应用部署,国产化AI应用平台,Dify私有化部署,OpenAI兼容接口,RainAgent,RainSkills"
         />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
@@ -506,6 +506,47 @@ export default function AiPrivateDeployment(): JSX.Element {
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section className={styles.sectionBlock}>
+        <div className={styles.sectionHead}>
+          <h2>按你的私有化场景继续阅读</h2>
+          <p>
+            从整套 AI 应用栈、企业内网、离线信创到 Cloud 迁移，选择最接近当前项目的一条路径。
+          </p>
+        </div>
+        <CompareEvidenceCards
+          items={[
+            {
+              type: '应用栈',
+              title: 'AI应用栈私有化部署',
+              metric: '前端 · API · 模型 · 数据',
+              description: '把模型服务、AI 应用、数据库和业务系统作为一套应用部署到自己的环境。',
+              href: '/solutions/ai-application-stack-private-deployment',
+            },
+            {
+              type: '企业内网',
+              title: '企业内网部署',
+              metric: '网络 · 账号 · 内部访问',
+              description: '规划镜像来源、模型文件、内部域名、身份认证和跨网络访问。',
+              href: '/solutions/enterprise-intranet-ai-deployment',
+            },
+            {
+              type: '离线信创',
+              title: '离线与信创部署',
+              metric: '材料 · 架构 · 现场验收',
+              description: '提前准备安装包、镜像、模型和架构适配清单，减少现场反复补材料。',
+              href: '/solutions/offline-xinchuang-ai-deployment',
+            },
+            {
+              type: '迁移',
+              title: 'Cloud迁移到私有环境',
+              metric: '盘点 · 迁移 · 切流 · 回滚',
+              description: '识别云上托管依赖，按数据、模型、应用和流量顺序迁移到私有环境。',
+              href: '/solutions/cloud-to-private-ai-migration',
+            },
+          ]}
+        />
       </section>
 
       <section className={styles.sectionBlock}>

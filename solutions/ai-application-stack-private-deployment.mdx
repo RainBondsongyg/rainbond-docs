@@ -1,0 +1,142 @@
+---
+title: AI应用栈私有化部署：把AI应用部署到自己的服务器
+description: 将AI开发生成的业务应用、Dify等AI Agent应用和AI大模型部署到自己的服务器或私有云，通过Rainbond统一管理访问、数据、模型和后续更新。
+sidebar_position: 2
+keywords:
+  - AI应用栈私有化部署
+  - AI应用部署到自己的服务器
+  - AI应用私有化部署
+  - AI Agent应用私有化
+  - 大模型私有化部署
+---
+
+import Head from '@docusaurus/Head';
+import AiPrivateArticleFaq from '@site/src/components/Solutions/AiPrivateArticleFaq';
+import {AiPrivateScopeVisual, AiDeploymentAssistantPaths, AiPrivateProofGallery, AiPrivateOutcomeGrid} from '@site/src/components/Solutions/AiPrivateArticleVisuals';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'AI应用栈私有化部署：把AI应用部署到自己的服务器',
+  description: '将 AI 生成应用、AI Agent 应用和 AI 大模型部署到自己的 Rainbond。',
+  url: 'https://www.rainbond.com/solutions/ai-application-stack-private-deployment',
+  mainEntityOfPage: 'https://www.rainbond.com/solutions/ai-application-stack-private-deployment',
+  image: 'https://www.rainbond.com/img/video/rainskills-ai-deploy-cover.jpg',
+  keywords: ['AI应用栈私有化部署', 'AI应用部署到自己的服务器', 'AI应用私有化部署', '大模型私有化部署'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'Thing', name: 'AI 应用栈私有化部署' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'AI应用私有化', url: 'https://www.rainbond.com/solutions/ai-private-deployment' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/solutions/ai-application-stack-private-deployment" />
+  <meta property="og:title" content="AI应用栈私有化部署：把AI应用部署到自己的服务器" />
+  <meta property="og:description" content="把 AI 写好的项目、Dify Agent 和大模型部署到自己的 Rainbond。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# AI应用栈私有化部署：把AI应用部署到自己的服务器
+
+无论你刚用 Claude Code、Codex 写好一个项目，已经在 Dify 中搭好 Agent，还是准备运行自己的大模型，都可以通过 Rainbond 部署到自己的服务器、私有云或 Kubernetes。
+
+应用上线后，从企业自己的地址访问；业务数据、知识库和文件保存在指定环境；应用、Agent 和模型可以通过内部地址连接，并继续升级、排错和迁移。
+
+<AiPrivateScopeVisual />
+
+<AiDeploymentAssistantPaths />
+
+## 按你的项目选择部署入口
+
+| 你现在有什么 | 进入 Rainbond 的方式 | 部署后的效果 |
+| --- | --- | --- |
+| Claude Code、Codex 开发的项目 | 源码、Git 仓库或容器镜像 | 前端、API 和数据服务在自己的环境运行 |
+| Dify 等 AI Agent 应用 | 应用市场或应用模板 | Agent、知识库、工作流和依赖服务统一管理 |
+| Qwen、DeepSeek、GLM 等模型 | 模型仓库、上传模型并创建实例 | 通过内部地址或 OpenAI 兼容 API 提供服务 |
+
+你可以只部署其中一种，也可以把业务应用、Agent 和模型全部放在同一个私有 Rainbond 中。
+
+## 三种常见的私有化方式
+
+### 业务应用私有，模型继续使用云API
+
+先把 AI 生成的业务系统部署到自己的服务器，数据库和文件进入企业环境，模型仍使用经过批准的外部 API。适合希望先解决应用上线和数据存储的团队。
+
+### Dify和业务应用私有，模型单独部署
+
+Dify、知识库和业务系统在 Rainbond 中运行，模型可以位于同一集群，也可以由企业模型团队提供内部 API。适合已有统一模型服务的企业。
+
+### 应用、Agent和模型全部私有化
+
+三层都在企业环境中运行，用户请求不依赖公网模型。适合数据不出域、企业内网和客户现场交付。
+
+<AiPrivateProofGallery
+  title="三种 AI 能力在 Rainbond 中都有明确入口"
+  items={[
+    {
+      src: 'https://grstatic.tos-cn-beijing.volces.com/wechat/rainskills/rainskills-deploy.png',
+      alt: 'RainSkills 将本地项目部署到私有 Rainbond 并返回访问结果',
+      caption: 'AI 生成项目：从当前目录直接部署并验证访问',
+    },
+    {
+      src: '/img/video/app-store-install-step-4.png',
+      alt: 'Rainbond 应用市场安装 Dify 后的应用拓扑',
+      caption: 'AI Agent：Dify 和依赖服务一起运行',
+    },
+    {
+      src: '/img/video/rainbond-llm-install-use-step-4.png',
+      alt: 'Rainbond 创建私有大模型实例的页面',
+      caption: 'AI 大模型：在自己的算力上创建推理实例',
+    },
+  ]}
+/>
+
+## 用Rainbond实现AI应用栈私有化
+
+你可以在 Claude Code、Codex 中通过 RainSkills 发起部署，也可以进入 Rainbond 控制台使用 RainAgent。两种方式都能处理 AI 生成的代码和 Dify 类 Agent 应用，并在部署后继续排错和验证访问。
+
+1. 在自己的服务器或 Kubernetes 上准备 Rainbond。
+2. AI 生成项目通过源码或镜像部署；Dify 从应用市场或模板安装。
+3. 按需创建私有模型实例，或者连接企业已有模型 API。
+4. 使用内部地址连接数据库、知识库、Agent 和模型。
+5. 通过应用网关配置企业域名和证书。
+6. 验证页面、API、Agent 对话和模型回复后创建应用版本。
+
+<AiPrivateOutcomeGrid
+  title="部署完成后，你会得到这些结果"
+  items={[
+    {label: '访问', value: '从自己的域名或企业内部地址使用'},
+    {label: '数据', value: '业务数据、知识库和文件保存在指定环境'},
+    {label: '模型', value: '调用自己的模型或企业批准的外部模型'},
+    {label: '运维', value: '继续更新、查看日志、创建版本和迁移'},
+  ]}
+/>
+
+## 常见问题
+
+<AiPrivateArticleFaq
+  items={[
+    {
+      question: 'AI应用私有化部署必须同时部署大模型吗？',
+      answer: '不必须。可以先私有化业务应用和数据，继续使用云模型；需要数据不出域时，再部署私有模型。',
+    },
+    {
+      question: 'AI应用部署到自己的服务器必须会Kubernetes吗？',
+      answer: '使用 Rainbond 可以通过应用、组件和网关完成部署，不需要为每个项目手写 Kubernetes YAML。',
+    },
+    {
+      question: 'Dify私有化和大模型私有化有什么区别？',
+      answer: 'Dify 私有化解决 Agent、知识库、工作流和数据的运行位置；大模型私有化解决模型文件、推理算力和模型 API。',
+    },
+  ]}
+/>
+
+## 继续了解
+
+- [AI 应用与大模型私有化部署解决方案](/solutions/ai-private-deployment)
+- [企业AI应用如何部署到内网](/solutions/enterprise-intranet-ai-deployment)
+- [AI应用离线与信创部署](/solutions/offline-xinchuang-ai-deployment)

@@ -1,0 +1,253 @@
+---
+title: Codex部署应用：从代码修改到交付验证
+description: 使用 Codex 和 RainSkills 将当前项目部署到 Rainbond，持续读取构建与运行状态，排查失败并验证最终访问地址。
+sidebar_position: 3
+keywords:
+  - Codex部署应用
+  - Codex部署项目
+  - Codex deployment skill
+  - Codex部署到自己的服务器
+  - Codex应用上线
+  - Codex RainSkills
+---
+
+import Head from '@docusaurus/Head';
+import RainSkillsArticleFaq from '@site/src/components/Solutions/RainSkillsArticleFaq';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'Codex部署应用：从代码修改到交付验证',
+  description: '使用 Codex 和 RainSkills 部署当前项目、处理运行问题并验证最终访问结果。',
+  url: 'https://www.rainbond.com/rainskills/codex-deploy-app',
+  mainEntityOfPage: 'https://www.rainbond.com/rainskills/codex-deploy-app',
+  image: 'https://www.rainbond.com/img/video/rainskills-ai-deploy-cover.jpg',
+  keywords: ['Codex部署应用', 'Codex部署项目', 'Codex deployment skill', 'Codex应用上线'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'SoftwareApplication', name: 'Codex' },
+    { '@type': 'SoftwareApplication', name: 'RainSkills', url: 'https://github.com/goodrain/rainskills' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'RainSkills：AI Agent 部署应用', url: 'https://www.rainbond.com/rainskills' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/rainskills/codex-deploy-app" />
+  <meta property="og:title" content="Codex部署应用：从代码修改到交付验证" />
+  <meta property="og:description" content="让 Codex 在完成编码后继续部署当前项目、处理运行问题并验证交付结果。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# Codex部署应用：从代码修改到交付验证
+
+## 在 Codex 里怎么发起部署
+
+如果 Codex 刚帮你写完页面或接口，最自然的做法是在同一个项目里继续部署。先让它检查项目能否生产构建，再确认要部署的组件和目标环境。这样能避免把开发服务器、测试数据或错误的 API 地址直接带到线上。
+
+推荐从当前项目目录开始：
+
+```text
+帮我安装 RainSkills，并连接到我要使用的 Rainbond。
+```
+
+安装完成后输入：
+
+```text
+帮我部署当前项目。不要在资源创建后就结束，继续检查运行状态和访问路径，最后给出访问地址。
+```
+
+## Codex deployment skill 解决什么问题？
+
+Codex 擅长理解仓库、修改代码、执行命令和验证开发结果，但生产部署需要另一组长期存在的上下文：应用属于哪个环境、包含哪些组件、依赖如何连接、端口如何开放、数据如何持久化，以及失败后应该读取哪些平台状态。
+
+RainSkills 将这些部署知识整理为 Agent 可以遵循的工作流，并通过 Rainbond MCP 读取和操作平台。三者的职责可以这样理解：
+
+| 能力 | 主要职责 |
+| --- | --- |
+| Codex | 理解当前项目、执行任务、修改代码并根据证据继续推进 |
+| RainSkills | 选择项目接入、部署、排错或交付验证流程 |
+| Rainbond MCP | 提供受控的平台状态查询和操作接口 |
+| Rainbond | 持续管理构建、组件、依赖、网络、存储、版本和运行状态 |
+
+这与“让 Codex 登录服务器执行几条命令”不同。应用被建模后，后续更新、扩缩容、排障和回滚都可以复用相同的对象与状态。
+
+## 把任务范围说清楚
+
+Codex 用户最常见的目标并不相同，先按当前任务选择入口：
+
+| 你想完成的事情 | 建议的第一句话 |
+| --- | --- |
+| 把当前目录第一次部署起来 | `分析当前项目，确认组件和依赖后部署到 Rainbond。` |
+| 更新一个已经运行的应用 | `核对当前项目绑定，测试通过后更新已有应用。` |
+| 只排查某个组件构建失败 | `只检查构建事件和日志，先不要修改业务代码。` |
+| 页面能打开但 API 不通 | `检查前端 API 地址、后端端口、组件依赖和网关路径。` |
+| 只想确认交付结果 | `不要修改配置，只验证页面、API 和最终访问地址。` |
+| 准备部署生产环境 | `先列出数据、密钥、域名、备份和回滚风险，不要立即发布。` |
+
+把范围说清楚，Codex 才不会在“修代码、改平台配置、创建新资源”之间做超出预期的选择。
+
+## 用 Codex 部署应用的完整流程
+
+### 1. 先确认仓库边界
+
+在 monorepo 或全栈仓库中，先让 Codex说明项目结构：
+
+```text
+分析当前仓库，列出需要部署的组件、每个组件的构建和启动命令、监听端口、依赖服务以及持久化需求。先不要创建资源。
+```
+
+重点确认：
+
+- 当前目录是否就是准备部署的项目根目录。
+- 是否包含多个可以独立运行的服务。
+- 前端构建后的产物目录是什么。
+- 后端是否监听 `0.0.0.0` 和正确端口。
+- 数据库、缓存、对象存储或外部 API 是否属于必需依赖。
+- 仓库中是否混入了不应部署的示例、测试或本地工具。
+
+### 2. 建立项目与 Rainbond 的绑定
+
+```text
+检查当前项目是否已经连接 Rainbond。如果没有，先初始化并让我确认目标团队和应用；如果已经连接，复用现有绑定。
+```
+
+明确绑定可以避免 Agent 把修改部署到错误的团队、应用或组件。不要依赖仓库名称猜测线上目标。
+
+### 3. 创建或更新应用拓扑
+
+```text
+根据刚才确认的组件和依赖部署当前项目。数据库密码等敏感配置由我提供，不要写入仓库。
+```
+
+对于全栈项目，推荐把前端、API、异步任务、数据库和缓存按运行边界拆分。只有当多个进程确实共享生命周期和扩缩容策略时，才考虑放在同一组件中。
+
+### 4. 跟踪构建与启动
+
+Codex 不应只等待一个部署命令返回。继续要求它检查：
+
+```text
+持续检查这次部署，区分源码构建、镜像、启动、依赖和访问问题。发现明确错误后先说明证据，再给出修复建议。
+```
+
+常见结果包括：
+
+| 状态 | 说明 | 下一步 |
+| --- | --- | --- |
+| 构建失败 | 依赖安装、编译、构建命令或版本不匹配 | 回到仓库修复构建问题并运行测试 |
+| 启动失败 | 启动命令、监听地址、环境变量或文件缺失 | 查看运行日志和组件配置 |
+| 依赖失败 | 数据库、缓存或内部服务无法连接 | 检查依赖关系、连接变量和服务状态 |
+| 访问失败 | 组件运行但页面或 API 不可达 | 检查端口、网关、域名和前端 API 地址 |
+| 资源不足 | CPU、内存、磁盘或调度条件不满足 | 停止自动重试并评估环境容量 |
+
+### 5. 完成交付验证
+
+```text
+验证当前应用是否已经交付成功。检查组件、Pod、事件、页面、API 和存储状态，输出访问地址与仍需人工确认的事项。
+```
+
+交付结论应该区分：
+
+- **已交付**：关键组件与访问路径均验证通过。
+- **需要人工验证**：技术状态正常，但登录、支付或业务数据需要人工账号确认。
+- **部分交付**：部分组件可用，仍有非核心组件或外部依赖未完成。
+- **阻塞**：代码、容量、权限或外部系统问题导致无法继续。
+
+## 哪些提示词更适合 Codex？
+
+### 部署当前项目
+
+```text
+帮我把当前项目部署到 Rainbond。如果还没有初始化，就先建立项目绑定，然后继续到交付验证。
+```
+
+### 只排查构建失败
+
+```text
+只检查 backend 组件为什么构建失败。先读取事件和构建日志，不要修改业务代码。
+```
+
+### 验证最终访问地址
+
+```text
+只确认当前应用是否已经交付成功，并给我最终访问地址。不要创建新组件或修改配置。
+```
+
+### 更新已经运行的应用
+
+```text
+先运行当前项目的测试和构建。通过后更新 Rainbond 中已绑定的应用，并验证原有访问地址仍然正常。
+```
+
+清晰的范围可以减少 Agent 在排错、修复、扩容和重构之间来回切换。
+
+## Codex 部署到自己的服务器时要注意什么？
+
+“自己的服务器”可以是单台服务器、已有 Kubernetes 集群或企业内部的 Rainbond。无论采用哪种方式，都应在部署前确认：
+
+1. 目标环境和团队由用户明确选择。
+2. 服务器资源满足应用与中间件需求。
+3. 域名、证书、入口端口和网络策略已经规划。
+4. 数据库和上传文件使用持久化存储。
+5. 敏感变量不写入仓库或公开日志。
+6. 生产更新前存在备份和回滚路径。
+
+RainSkills 可以引导和检查这些步骤，但不会替用户决定生产容量、数据保留策略或高风险操作。
+
+## Codex 修改代码后如何安全发布？
+
+建议坚持“修改、验证、部署、再验证”的顺序：
+
+```text
+代码修改 → 本地测试/构建 → 查看差异 → 部署预览环境 → 验证页面和 API → 发布生产 → 保留回滚版本
+```
+
+不要因为修改由 AI 完成就跳过测试，也不要把“Codex 没有报告错误”当作部署成功。最终判断应来自构建结果、运行状态和真实访问检查。
+
+## 部署结束时要看什么
+
+Codex 完成部署后，你需要的是一份清楚的交付结果，而不是一长串工具调用记录：
+
+- 部署到了哪个团队、应用和环境。
+- 本次创建或更新了哪些组件。
+- 构建和启动是否成功，有没有被忽略的异常事件。
+- 哪个页面地址可以访问，核心 API 是否验证通过。
+- 哪些业务流程无法自动验证，需要你手动操作。
+- 如果失败，问题属于代码、配置、资源、权限还是外部依赖。
+- 当前版本如何再次更新，以及出现问题时如何回滚。
+
+如果结果中缺少目标环境、访问地址或验证证据，应继续追问，而不是直接结束任务。
+
+## 常见问题
+
+<RainSkillsArticleFaq
+  items={[
+    {
+      question: 'Codex 可以直接部署 Node.js、Python、Go 或 Java 项目吗？',
+      answer: '可以从这些项目开始，但是否能成功构建取决于仓库中的依赖、构建命令、运行时版本和启动方式。RainSkills 会先识别项目，再通过 Rainbond 的源码构建或其他部署方式进行交付。',
+    },
+    {
+      question: 'Codex 部署应用需要 Dockerfile 吗？',
+      answer: '不一定。Rainbond 可以根据支持的语言和项目结构进行源码构建，也可以使用已有 Dockerfile、容器镜像、Compose 或应用模板。应选择最贴近项目现状的方式，不要为了部署额外引入不必要的文件。',
+    },
+    {
+      question: 'Codex 能自动修复所有部署错误吗？',
+      answer: '不能。低风险配置问题可以在确认后处理；业务代码、构建脚本、镜像内容、平台容量、权限和外部依赖问题需要明确边界，必要时停止并交给用户或相应负责人。',
+    },
+    {
+      question: '如何确认 Codex 没有部署到错误环境？',
+      answer: '检查当前项目绑定信息，并在创建、更新或删除资源前确认目标企业、团队、应用和组件。不要仅凭目录名或 Git 仓库名推断线上目标。',
+    },
+  ]}
+/>
+
+## 相关内容
+
+- 查看专题总览：[AI Agent 部署应用](/rainskills)
+- 使用 Claude Code：[Claude Code部署应用](/rainskills/claude-code-deploy-app)
+- 排查部署失败：[AI项目部署失败自动排查](/rainskills/ai-deployment-troubleshooting)
+- 准备生产上线：[Vibe Coding项目如何上线](/rainskills/vibe-coding-go-live)
+- 了解 Codex：[OpenAI Codex 官方文档](https://developers.openai.com/codex/overview)
+- 查看 RainSkills 源码：[GitHub](https://github.com/goodrain/rainskills)

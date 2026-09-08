@@ -1,0 +1,147 @@
+---
+title: 从Rainbond Cloud迁移到私有环境：应用模板导出与安装
+description: 将Rainbond Cloud中已经跑通的AI应用创建快照并导出应用模板，再安装到自己的私有Rainbond，保留应用结构、版本和后续升级路径。
+sidebar_position: 5
+keywords:
+  - Cloud迁移到私有环境
+  - Rainbond Cloud应用迁移
+  - 应用模板导出
+  - 迁移到私有Rainbond
+  - AI应用私有化部署
+---
+
+import Head from '@docusaurus/Head';
+import AiPrivateArticleFaq from '@site/src/components/Solutions/AiPrivateArticleFaq';
+import {AiPrivateJourney, AiPrivateProofGallery, AiPrivateOutcomeGrid} from '@site/src/components/Solutions/AiPrivateArticleVisuals';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: '从Rainbond Cloud迁移到私有环境：应用模板导出与安装',
+  description: '将 Rainbond Cloud 中已经跑通的 AI 应用导出并安装到自己的私有 Rainbond。',
+  url: 'https://www.rainbond.com/solutions/cloud-to-private-ai-migration',
+  mainEntityOfPage: 'https://www.rainbond.com/solutions/cloud-to-private-ai-migration',
+  image: 'https://www.rainbond.com/img/video/offline-delivery-cover.jpg',
+  keywords: ['Cloud迁移到私有环境', 'Rainbond Cloud应用迁移', '应用模板导出', 'AI应用私有化部署'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'Thing', name: '从 Rainbond Cloud 迁移到私有 Rainbond' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'AI应用私有化', url: 'https://www.rainbond.com/solutions/ai-private-deployment' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/solutions/cloud-to-private-ai-migration" />
+  <meta property="og:title" content="从Rainbond Cloud迁移到私有环境：应用模板导出与安装" />
+  <meta property="og:description" content="把 Cloud 中验证完成的 AI 应用导出，再安装到自己的私有 Rainbond。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# 从Rainbond Cloud迁移到私有环境：应用模板导出与安装
+
+如果你的 AI 应用已经在 Rainbond Cloud 跑通，可以通过应用快照和应用模板迁移到自己的私有 Rainbond，不需要重新手工创建前端、API、Worker、数据库和缓存等服务。
+
+这条路径适用于 AI 开发生成的业务应用，也适用于 Dify 等多组件 AI Agent 应用。
+
+应用在 Cloud 中部署和验证时，可以从 Claude Code、Codex 使用 RainSkills，也可以在 Rainbond 控制台使用 RainAgent；迁移到私有 Rainbond 后，两种入口仍可继续用于更新、排错和交付验证。
+
+<AiPrivateJourney
+  title="四步把Cloud应用带回自己的Rainbond"
+  steps={[
+    {title: 'Cloud 验证', description: '确认页面、API、Agent 工作流和数据服务正常。'},
+    {title: '发布模板', description: '创建应用快照，发布一个有明确版本的应用模板。'},
+    {title: '导入私有环境', description: '导出模板包，在私有 Rainbond 应用市场中上传。'},
+    {title: '安装并验收', description: '替换环境配置，验证访问、数据和模型调用。'},
+  ]}
+/>
+
+## 在Cloud中完成导出
+
+1. 确认应用中的页面、API 和核心业务路径已经验证通过。
+2. 在应用总览或应用版本页面创建快照。
+3. 选择快照，填写模板名称和版本，发布到本地组件库。
+4. 从发布记录中选择目标版本并导出应用模板包。
+
+模板版本中应写清应用用途、代码版本、主要组件、CPU 架构和安装后需要重新配置的内容。
+
+## 在私有Rainbond中安装
+
+登录自己的 Rainbond，进入：
+
+```text
+平台管理 → 应用市场 → 离线导入
+```
+
+上传模板包后，从本地组件库选择目标团队并安装。安装完成后检查组件数量、依赖关系、运行状态和访问入口是否符合预期。
+
+<AiPrivateProofGallery
+  title="快照、模板导出和私有环境安装"
+  items={[
+    {
+      src: '/img/video/offline-delivery-step-2-1.png',
+      alt: '从 Rainbond 应用总览进入快照创建入口',
+      caption: '为 Cloud 中已经验证的应用创建快照',
+    },
+    {
+      src: '/img/video/offline-delivery-step-5-1.png',
+      alt: 'Rainbond 应用模板版本导出页面',
+      caption: '选择应用模板版本并导出',
+    },
+    {
+      src: '/img/video/offline-delivery-step-7-2.png',
+      alt: '私有 Rainbond 中安装完成的 Dify 应用拓扑',
+      caption: '在私有 Rainbond 中安装并检查应用拓扑',
+    },
+  ]}
+/>
+
+## 哪些内容需要单独处理
+
+应用模板主要交付应用组件、依赖关系和版本，下面这些内容需要根据实际环境迁移或重新配置：
+
+| 内容 | 处理方式 |
+| --- | --- |
+| 数据库业务数据 | 通过数据库备份和恢复迁移 |
+| 知识库与上传文件 | 导出后进入私有对象存储或持久化卷 |
+| 大模型文件 | 单独导入私有模型仓库并创建实例 |
+| 密码、Token和证书 | 在私有环境重新创建，不写入公共模板 |
+| 域名与模型API | 替换成私有环境地址 |
+
+<AiPrivateOutcomeGrid
+  title="迁移完成后，你会拿到这些结果"
+  items={[
+    {label: '应用版本', value: '私有 Rainbond 中存在明确的模板和安装版本'},
+    {label: '运行拓扑', value: '业务应用或 Dify 的组件关系恢复正常'},
+    {label: '私有配置', value: '域名、数据、密钥和模型指向自己的环境'},
+    {label: '后续升级', value: 'Cloud 新版本可以继续通过模板导入升级'},
+  ]}
+/>
+
+## 常见问题
+
+<AiPrivateArticleFaq
+  items={[
+    {
+      question: 'Rainbond Cloud中的应用可以迁移到私有Rainbond吗？',
+      answer: '可以。创建应用快照并发布为模板，导出后在私有 Rainbond 的应用市场中离线导入和安装。',
+    },
+    {
+      question: '应用模板会包含业务数据和模型文件吗？',
+      answer: '不能默认全部包含。模板主要交付应用组件、关系和版本；数据库数据、知识库文件、模型与生产密钥应单独处理。',
+    },
+    {
+      question: '以后还能继续从Cloud发布新版本吗？',
+      answer: '可以。新版本在 Cloud 中验证后再次创建快照和模板，导入私有 Rainbond 执行升级即可。',
+    },
+  ]}
+/>
+
+## 继续了解
+
+- [AI 应用与大模型私有化部署解决方案](/solutions/ai-private-deployment)
+- [AI应用栈私有化部署](/solutions/ai-application-stack-private-deployment)
+- [AI应用离线部署与信创适配](/solutions/offline-xinchuang-ai-deployment)
+- [查看应用模板离线交付视频](/videos/offline-delivery)

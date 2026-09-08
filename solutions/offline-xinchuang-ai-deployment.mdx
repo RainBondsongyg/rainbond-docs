@@ -1,0 +1,151 @@
+---
+title: AI应用离线部署与信创适配：让AI应用在隔离环境运行
+description: 通过Rainbond将AI生成的业务应用、Dify类AI Agent应用和AI大模型部署到离线内网、麒麟、ARM等国产化信创环境，实现数据不出域和统一运维。
+sidebar_position: 4
+keywords:
+  - AI应用离线部署
+  - 信创AI应用部署
+  - 国产化AI应用平台
+  - AI Agent离线部署
+  - 大模型离线部署
+---
+
+import Head from '@docusaurus/Head';
+import AiPrivateArticleFaq from '@site/src/components/Solutions/AiPrivateArticleFaq';
+import {AiPrivateJourney, AiPrivateProofGallery, AiPrivateOutcomeGrid} from '@site/src/components/Solutions/AiPrivateArticleVisuals';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'AI应用离线部署与信创适配：让AI应用在隔离环境运行',
+  description: '通过 Rainbond 将 AI 生成应用、AI Agent 和大模型部署到离线与国产化信创环境。',
+  url: 'https://www.rainbond.com/solutions/offline-xinchuang-ai-deployment',
+  mainEntityOfPage: 'https://www.rainbond.com/solutions/offline-xinchuang-ai-deployment',
+  image: 'https://www.rainbond.com/img/video/offline-xinchuang-install-cover.jpg',
+  keywords: ['AI应用离线部署', '信创AI应用部署', '国产化AI应用平台'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'Thing', name: 'AI 应用离线与信创部署' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'AI应用私有化', url: 'https://www.rainbond.com/solutions/ai-private-deployment' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/solutions/offline-xinchuang-ai-deployment" />
+  <meta property="og:title" content="AI应用离线部署与信创适配：让AI应用在隔离环境运行" />
+  <meta property="og:description" content="把 AI 生成应用、Dify Agent 和大模型部署到离线与国产化环境。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# AI应用离线部署与信创适配：让AI应用在隔离环境运行
+
+政企内网、客户现场和信创项目经常无法直接使用公有云 AI 服务。通过 Rainbond，可以把 AI 生成的业务应用、Dify 类 Agent 应用和大模型放进企业自己的离线或国产化环境，用户从内部地址访问，知识库、业务数据和模型请求留在指定网络中。
+
+<AiPrivateJourney
+  title="AI应用进入离线信创环境后的运行方式"
+  steps={[
+    {title: '准备AI资产', description: '代码、业务镜像、Agent组件和模型文件进入企业内部。'},
+    {title: 'AI发起部署', description: '通过 RainSkills 或 RainAgent 创建和配置应用。'},
+    {title: 'Rainbond承载', description: '统一运行应用、Agent、数据服务和模型实例。'},
+    {title: '内网用户访问', description: '从内部域名使用业务应用、知识库和模型能力。'},
+  ]}
+/>
+
+## 哪些AI应用可以部署到离线信创环境
+
+| AI应用类型 | 在Rainbond中的运行方式 | 用户获得的效果 |
+| --- | --- | --- |
+| AI生成的业务代码 | 从内网代码仓库构建，或直接使用企业镜像 | 前端、API和数据服务在企业环境持续运行 |
+| Dify类AI Agent应用 | 将Dify及数据库、Redis、向量服务等作为完整应用运行 | Agent、知识库和工作流在内网使用 |
+| AI大模型 | 在企业算力上创建模型实例并提供内部API | 业务系统不再依赖公网模型地址 |
+
+三类应用可以单独部署，也可以在同一套 Rainbond 中连接。例如，内部业务系统调用 Dify，Dify 再通过内网 API 调用企业自己的模型。
+
+## Rainbond在离线环境中解决什么
+
+### 让应用运行不依赖公网服务
+
+代码仓库、镜像、语言依赖、Agent组件和模型文件准备到企业内部后，应用的构建、启动、访问和日常运维都可以在目标网络内完成。
+
+### 让复杂AI应用仍然按应用管理
+
+Dify等Agent平台包含多个业务和数据服务。Rainbond用应用拓扑管理这些服务之间的关系，出现问题时可以继续查看组件状态、日志和事件，而不是回到服务器逐个找进程。
+
+### 让模型成为内部服务
+
+大模型运行在企业指定的CPU、GPU或其他算力环境中，通过内部地址和API密钥提供给业务应用。模型服务可以独立更新和监控，不必与Dify或业务代码绑在同一个容器中。
+
+### 让AI继续帮助部署和排错
+
+开发者可以在Claude Code、Codex中通过RainSkills部署AI生成代码或Dify类应用；平台用户可以在Rainbond控制台使用RainAgent完成部署、排错和访问验证。
+
+## 离线部署与信创部署关注点不同
+
+| 场景 | 主要限制 | Rainbond的作用 |
+| --- | --- | --- |
+| AI应用离线部署 | 不能访问公网代码仓库、镜像仓库、模型站点或外部API | 使用企业内部可用的代码、镜像、依赖和模型运行应用 |
+| 信创AI应用部署 | CPU架构、操作系统、数据库、中间件和算力设备需要国产化适配 | 统一管理不同架构下的应用组件和服务关系 |
+| 离线+信创 | 同时存在网络隔离与软硬件适配要求 | 在目标环境中保持一致的应用部署和运维入口 |
+
+信创适配需要落实到具体组合。Rainbond能够运行在X86和ARM环境，但业务镜像、Dify依赖、国产数据库、GPU或加速卡以及推理框架，仍要根据目标版本逐项验证。
+
+<AiPrivateProofGallery
+  title="三类AI能力在私有环境中的运行结果"
+  items={[
+    {
+      src: 'https://grstatic.tos-cn-beijing.volces.com/wechat/rainskills/rainskills-deploy.png',
+      alt: 'RainSkills将AI生成的代码部署到私有Rainbond',
+      caption: 'AI生成代码：通过RainSkills部署到私有Rainbond并验证访问',
+    },
+    {
+      src: '/img/video/app-store-install-step-4.png',
+      alt: 'Rainbond中运行的Dify Agent应用拓扑',
+      caption: 'AI Agent应用：Dify及依赖服务在同一环境运行',
+    },
+    {
+      src: '/img/video/rainbond-llm-install-use-step-7.png',
+      alt: 'Rainbond私有大模型监控页面',
+      caption: 'AI大模型：在企业算力上运行并持续查看状态',
+    },
+  ]}
+/>
+
+<AiPrivateOutcomeGrid
+  title="最终交付的是一套可用的企业AI环境"
+  items={[
+    {label: '访问', value: '员工从内部域名使用AI应用和Agent'},
+    {label: '数据', value: '知识库、文件和业务数据留在指定网络'},
+    {label: '模型', value: '业务请求通过内部模型API完成'},
+    {label: '运维', value: '统一查看应用状态、日志、事件和模型资源'},
+  ]}
+/>
+
+## 常见问题
+
+<AiPrivateArticleFaq
+  items={[
+    {
+      question: 'AI应用离线部署必须同时部署私有大模型吗？',
+      answer: '如果环境完全不能访问公网模型，就需要准备私有模型；企业允许通过受控出口调用模型时，也可以只把应用和数据部署在内网。',
+    },
+    {
+      question: 'RainSkills和RainAgent在离线环境中能做什么？',
+      answer: '它们可以帮助部署AI生成代码和Dify类Agent应用，并继续读取Rainbond中的运行状态、日志和访问结果。Agent本身需要能够访问企业允许使用的模型服务。',
+    },
+    {
+      question: '支持ARM是否代表所有AI应用都完成信创适配？',
+      answer: '不代表。业务镜像、数据库、Dify依赖、GPU或加速卡、驱动和推理框架都需要按目标环境分别验证。',
+    },
+  ]}
+/>
+
+## 继续了解
+
+- [AI应用栈私有化部署](/solutions/ai-application-stack-private-deployment)
+- [企业AI应用如何部署到内网](/solutions/enterprise-intranet-ai-deployment)
+- [AI应用与大模型私有化部署解决方案](/solutions/ai-private-deployment)
+- [需要实际安装时查看离线安装文档](/docs/installation/offline)
+- [查看完整离线与信创专题](/offline-and-xinchuang)

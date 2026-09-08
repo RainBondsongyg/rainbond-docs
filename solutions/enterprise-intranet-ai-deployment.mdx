@@ -1,0 +1,141 @@
+---
+title: 企业AI应用私有化：如何部署到企业内网
+description: 将AI开发生成的业务应用、Dify等AI Agent应用和大模型部署到企业内网，通过内部域名访问，让知识库、业务数据和模型调用保持在企业控制范围内。
+sidebar_position: 3
+keywords:
+  - 企业AI应用私有化
+  - AI应用内网部署
+  - 企业内网部署AI应用
+  - AI Agent内网部署
+  - 大模型内网部署
+---
+
+import Head from '@docusaurus/Head';
+import AiPrivateArticleFaq from '@site/src/components/Solutions/AiPrivateArticleFaq';
+import {AiPrivateJourney, AiPrivateProofGallery, AiPrivateOutcomeGrid} from '@site/src/components/Solutions/AiPrivateArticleVisuals';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: '企业AI应用私有化：如何部署到企业内网',
+  description: '将业务应用、AI Agent 和大模型部署到企业内网，通过内部地址访问和调用。',
+  url: 'https://www.rainbond.com/solutions/enterprise-intranet-ai-deployment',
+  mainEntityOfPage: 'https://www.rainbond.com/solutions/enterprise-intranet-ai-deployment',
+  image: 'https://www.rainbond.com/img/video/rainagent-install-use-cover.jpg',
+  keywords: ['企业AI应用私有化', 'AI应用内网部署', '企业内网部署AI应用'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'Thing', name: '企业内网 AI 应用部署' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'AI应用私有化', url: 'https://www.rainbond.com/solutions/ai-private-deployment' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/solutions/enterprise-intranet-ai-deployment" />
+  <meta property="og:title" content="企业AI应用私有化：如何部署到企业内网" />
+  <meta property="og:description" content="让业务应用、Dify Agent 和大模型在企业内网中运行和连接。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# 企业AI应用私有化：如何部署到企业内网
+
+如果你的 AI 项目已经能在本地或 Cloud 中运行，可以进一步部署到企业内网：员工从内部域名访问，Dify 和业务应用使用企业数据库与知识库，大模型通过内部服务或批准的网络出口提供能力。
+
+项目还在 Claude Code、Codex 等开发工具中时，可以通过 RainSkills 直接部署；已经进入 Rainbond 控制台时，可以使用 RainAgent 部署 AI 生成代码或 Dify 类 Agent 应用。应用运行后，再配置内网地址和访问边界。
+
+<AiPrivateJourney
+  title="把现有 AI 项目带进企业内网"
+  steps={[
+    {title: '部署业务应用', description: '源码、镜像或应用模板进入企业自己的 Rainbond。'},
+    {title: '安装 Agent 应用', description: '部署 Dify，并连接内部数据库、知识库和向量服务。'},
+    {title: '接入模型', description: '调用私有模型，或通过企业批准的出口使用云模型。'},
+    {title: '开放员工入口', description: '配置内部域名、证书、账号和允许访问的网段。'},
+  ]}
+/>
+
+## 根据网络条件选择部署方式
+
+| 你的内网环境 | 推荐方式 |
+| --- | --- |
+| 可以访问公网 | 从源码、镜像仓库或 Rainbond 应用市场在线部署 |
+| 只能访问白名单 | 放行代码仓库、镜像仓库、模型和必要的外部 API |
+| 只有办公网可以访问 | 使用内部 DNS、Rainbond 网关和企业证书开放应用 |
+| 完全不能联网 | 使用应用模板离线包、内网镜像仓库和本地模型文件 |
+
+## 三类AI应用如何进入内网
+
+### AI开发生成的业务应用
+
+Claude Code、Codex 等工具开发的项目，可以通过源码、Git、镜像或应用模板部署到内网 Rainbond。部署后，前端和 API 使用企业地址，数据库、缓存和文件存储连接企业内部服务。
+
+### Dify等AI Agent应用
+
+从 Rainbond 应用市场或本地组件库安装 Dify，将 Agent、知识库、工作流和数据服务放进企业环境。网页抓取、插件、Webhook 和外部模型是否允许联网，再按企业网络规则控制。
+
+### 企业私有大模型
+
+在 Rainbond 中准备模型并创建实例，通过内部 Base URL 和独立 API Key 提供给 Dify 或业务应用。如果继续使用云模型，应明确允许发送的数据、代理或白名单地址和审计方式。
+
+<AiPrivateProofGallery
+  title="Agent应用和模型都可以使用内部入口"
+  items={[
+    {
+      src: '/img/video/app-store-install-step-4.png',
+      alt: 'Rainbond 中运行的 Dify AI Agent 应用拓扑',
+      caption: 'Dify、数据库、缓存和向量服务运行在企业环境',
+    },
+    {
+      src: '/img/video/rainbond-llm-install-use-step-6.png',
+      alt: 'Rainbond 私有大模型 API 密钥管理页面',
+      caption: '为内网业务应用创建独立的模型调用密钥',
+    },
+  ]}
+/>
+
+## 上线前验证一条真实路径
+
+```text
+员工打开内部域名 → 登录业务应用或 Dify
+→ 上传测试文件 → 创建知识库或执行工作流
+→ 调用模型 → 返回结果
+```
+
+这条路径通过后，再检查组件重启后的数据、日志、模型调用地址和外部网络请求。
+
+<AiPrivateOutcomeGrid
+  title="企业内网部署完成后的结果"
+  items={[
+    {label: '员工访问', value: '从办公网或指定网段打开内部域名'},
+    {label: '服务调用', value: '应用、Agent、数据库和模型通过内部地址连接'},
+    {label: '数据位置', value: '知识库、文件和业务数据进入指定环境'},
+    {label: '外部出口', value: '模型、插件和回调使用明确的白名单'},
+  ]}
+/>
+
+## 常见问题
+
+<AiPrivateArticleFaq
+  items={[
+    {
+      question: '企业内网部署AI应用必须同时部署大模型吗？',
+      answer: '不必须。可以先部署业务应用和 Dify，通过批准的出口调用云模型；要求数据不出域时，再部署私有模型。',
+    },
+    {
+      question: 'Dify部署到内网后还会访问公网吗？',
+      answer: '取决于模型、插件、网页抓取和 Webhook 配置。部署前应列出外部依赖，并选择关闭、代理或加入白名单。',
+    },
+    {
+      question: '内网完全不能联网怎么办？',
+      answer: '将应用发布为 Rainbond 应用模板，准备离线镜像、模型和依赖，再从私有 Rainbond 的应用市场离线导入。',
+    },
+  ]}
+/>
+
+## 继续了解
+
+- [AI应用栈私有化部署](/solutions/ai-application-stack-private-deployment)
+- [AI应用离线部署与信创适配](/solutions/offline-xinchuang-ai-deployment)
+- [AI 应用与大模型私有化部署解决方案](/solutions/ai-private-deployment)
