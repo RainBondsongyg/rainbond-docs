@@ -19,14 +19,12 @@ const whyRainbondSource = read('src/components/HomePage/WhyRainbond/index.tsx');
 const whyRainbondStyles = read('src/components/HomePage/WhyRainbond/styles.module.css');
 const homeSource = read('src/pages/index.tsx');
 
-test('why Rainbond renders the approved screenshot copy verbatim', () => {
+test('why Rainbond preserves the approved left-side copy', () => {
   [
-    'WHY RAINBOND',
-    'AI 负责开发代码，Rainbond 让它稳定运行',
+    'AI开发代码，Rainbond 让它稳定运行',
     'AI 可以完成一次部署，但环境、依赖、网络、数据和后续运维，仍需要 Rainbond 持续管理。',
-    'Agent 负责发起部署，',
-    '稳定运行',
-    '并且持续可运维。',
+    '让 AI 从代码',
+    '部署与运维',
     '不只完成一次部署',
     'Rainbond 统一处理构建、网络、数据、证书和扩缩容。',
     '后续运维仍然可控',
@@ -47,26 +45,21 @@ test('why Rainbond uses a labelled section and semantic benefit and card structu
   );
   assert.ok(/<h3 className=\{styles\.claim\}>/.test(whyRainbondSource), 'Expected the main claim to be a lower-level heading.');
   assert.ok(/<ul className=\{styles\.benefitList\}>[\s\S]*<li[\s\S]*<\/li>[\s\S]*<\/ul>/.test(whyRainbondSource));
-  assert.ok(/runtimeCards\.map\([\s\S]*<article\s/.test(whyRainbondSource), 'Expected every runtime card to use an article element.');
-  assert.strictEqual((whyRainbondSource.match(/title:\s*'(?:Agent 直接部署到服务器|环境、依赖与后续运维|Agent 通过 Rainbond 部署)'/g) || []).length, 3, 'Expected three comparison card definitions.');
-  assert.ok(!/<(?:a|button)\b|<Link\b|<TrackedLink\b/.test(whyRainbondSource), 'Expected this explanatory section to have no controls.');
+  assert.strictEqual((whyRainbondSource.match(/<section className=\{styles\.methodCard\}/g) || []).length, 2);
+  assert.strictEqual((whyRainbondSource.match(/onClick=\{\(\) => handleCopy\('(agent|command)'\)\}/g) || []).length, 2);
+  assert.ok(/role="separator" aria-label="或者"/.test(whyRainbondSource));
 });
 
-test('why Rainbond cards keep the screenshot order and status pairing', () => {
-  const pairs = [
-    ['Agent 直接部署到服务器', '完成一次部署'],
-    ['环境、依赖与后续运维', '仍需自己处理'],
-    ['Agent 通过 Rainbond 部署', '持续可运维'],
-  ];
+test('why Rainbond presents two alternative RainSkills installation methods', () => {
+  const agentIndex = whyRainbondSource.indexOf('复制到 AI Agent');
+  const separatorIndex = whyRainbondSource.indexOf('aria-label="或者"');
+  const commandIndex = whyRainbondSource.indexOf('使用命令安装');
 
-  let previousIndex = -1;
-  pairs.forEach(([title, status]) => {
-    const titleIndex = whyRainbondSource.indexOf(`title: '${title}'`);
-    const statusIndex = whyRainbondSource.indexOf(`status: '${status}'`);
-    assert.ok(titleIndex > previousIndex, `Expected ${title} after the previous card.`);
-    assert.ok(statusIndex > titleIndex, `Expected ${status} to remain paired with ${title}.`);
-    previousIndex = statusIndex;
-  });
+  assert.ok(agentIndex >= 0 && separatorIndex > agentIndex && commandIndex > separatorIndex);
+  assert.ok(whyRainbondSource.includes("const RAINSKILLS_AGENT_PROMPT = '帮我安装rainskills';"));
+  assert.ok(whyRainbondSource.includes("const RAINSKILLS_INSTALL_COMMAND = 'npx --yes rainskills';"));
+  assert.ok(whyRainbondSource.includes('任选一种安装方式'));
+  assert.ok(whyRainbondSource.includes('推荐'));
 });
 
 test('homepage places Why Rainbond second and moves ChoosePath directly before Users', () => {
@@ -80,26 +73,35 @@ test('homepage places Why Rainbond second and moves ChoosePath directly before U
   });
 });
 
-test('desktop uses a 46/54 split and staggered cards', () => {
+test('desktop keeps the 46/54 split and stacks the two installation methods', () => {
   assert.ok(
     /\.contentGrid\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*0\.46fr\)\s+minmax\(0,\s*0\.54fr\);/.test(whyRainbondStyles),
     'Expected the approved desktop copy/visual split.'
   );
-  ['codeCard', 'databaseCard', 'platformCard'].forEach((className) => {
-    assert.ok(new RegExp(`\\.${className}\\s*\\{[\\s\\S]*(?:top|left|right):`).test(whyRainbondStyles), `Expected ${className} to define a desktop offset.`);
-  });
+  assert.ok(/\.installMethods\s*\{[\s\S]*display:\s*grid;[\s\S]*gap:\s*0\.875rem;/.test(whyRainbondStyles));
+  assert.ok(/\.methodDivider\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto\s+minmax\(0,\s*1fr\);/.test(whyRainbondStyles));
 });
 
-test('mobile stacks content and resets card positioning without overflow', () => {
+test('mobile stacks content and keeps both copy actions usable', () => {
   assert.ok(/\.section\s*\{[\s\S]*overflow:\s*(?:hidden|clip);/.test(whyRainbondStyles));
   assert.ok(
     /@media \(max-width:\s*959px\)\s*\{[\s\S]*\.contentGrid\s*\{[\s\S]*grid-template-columns:\s*1fr;/.test(whyRainbondStyles),
     'Expected a single-column mobile layout below 960px.'
   );
-  assert.ok(
-    /@media \(max-width:\s*959px\)\s*\{[\s\S]*\.visualCard\s*\{[\s\S]*position:\s*static;[\s\S]*width:\s*100%;[\s\S]*max-width:\s*100%;[\s\S]*transform:\s*none;/.test(whyRainbondStyles),
-    'Expected mobile cards to reset offsets and fit the viewport.'
-  );
+  assert.ok(/@media \(max-width:\s*600px\)\s*\{[\s\S]*\.copyRow\s*\{[\s\S]*grid-template-columns:\s*1fr;/.test(whyRainbondStyles));
+  assert.ok(/@media \(max-width:\s*600px\)\s*\{[\s\S]*\.copyButton\s*\{[\s\S]*width:\s*100%;/.test(whyRainbondStyles));
+});
+
+test('both installation methods copy independently and emit source-specific analytics', () => {
+  assert.ok(whyRainbondSource.includes("import copyToClipboard from 'copy-to-clipboard';"));
+  assert.ok(whyRainbondSource.includes("import { trackUmamiEvent } from '@src/utils/umami';"));
+  assert.ok(whyRainbondSource.includes("'cta_home_second_screen_rainskills_agent_copied'"));
+  assert.ok(whyRainbondSource.includes("'cta_home_second_screen_rainskills_command_copied'"));
+  assert.ok(whyRainbondSource.includes("module: 'home_second_screen'"));
+  assert.ok(whyRainbondSource.includes("position: 'second_screen'"));
+  assert.ok(whyRainbondSource.includes("install_method: target"));
+  assert.ok(/<p className=\{styles\.copyFeedback\} aria-live="polite">/.test(whyRainbondSource));
+  assert.ok(whyRainbondSource.includes('复制失败，请重试'));
 });
 
 console.log('home Why Rainbond tests passed');

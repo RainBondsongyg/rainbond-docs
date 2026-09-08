@@ -38,9 +38,22 @@ test('creates an independent RainSkills content collection with its own sidebar'
   const rainskillsSidebar = read('rainskillsSidebar.js');
   [
     'rainskillsSidebar',
-    "id: 'index'",
+    "type: 'doc'",
     "label: 'AI Agent 部署应用'",
+    "id: 'index'",
+    "id: 'claude-code-deploy-app'",
+    "label: 'Claude Code部署应用'",
+    "id: 'codex-deploy-app'",
+    "label: 'Codex部署应用'",
+    "id: 'ai-deployment-troubleshooting'",
+    "label: 'AI项目部署失败自动排查'",
+    "id: 'vibe-coding-go-live'",
+    "label: 'Vibe Coding项目如何上线'",
   ].forEach(copy => assert.ok(rainskillsSidebar.includes(copy), `Expected RainSkills sidebar: ${copy}`));
+  assert.strictEqual((rainskillsSidebar.match(/type: 'doc'/g) || []).length, 5);
+  assert.ok(!rainskillsSidebar.includes("type: 'category'"));
+  assert.ok(!rainskillsSidebar.includes('collapsed:'));
+  assert.ok(!rainskillsSidebar.includes('items:'));
 
   const config = read('docusaurus.config.js');
   [
@@ -53,6 +66,131 @@ test('creates an independent RainSkills content collection with its own sidebar'
   const layout = read('src/theme/Layout/index.tsx');
   assert.ok(layout.includes("pathname.startsWith('/rainskills')"));
   assert.ok(layout.includes('rainskills_url'));
+});
+
+test('adds four substantive and indexable content pages', () => {
+  const pages = [
+    [
+      'rainskills/claude-code-deploy-app.mdx',
+      'Claude Code部署应用',
+      ['## 先确认这次要部署什么', '## Claude Code 部署应用的完整流程', '## 怎么判断部署真的完成了', '## 常见问题'],
+    ],
+    [
+      'rainskills/codex-deploy-app.mdx',
+      'Codex部署应用',
+      ['## 在 Codex 里怎么发起部署', '## 用 Codex 部署应用的完整流程', '## 部署结束时要看什么', '## 常见问题'],
+    ],
+    [
+      'rainskills/ai-deployment-troubleshooting.mdx',
+      'AI项目部署失败自动排查',
+      ['## 别急着重试，先看现象', '## RainSkills 如何逐层排查', '## 一次有效的排查应该留下什么', '## 常见问题'],
+    ],
+    [
+      'rainskills/vibe-coding-go-live.mdx',
+      'Vibe Coding项目如何上线',
+      ['## 先判断项目能不能上线', '## 原型能运行，为什么还不能直接上线？', '## Vibe Coding 项目上线流程', '## 上线之后，至少要回答这几个问题', '## 常见问题'],
+    ],
+  ];
+
+  pages.forEach(([relativePath, title, headings]) => {
+    const pagePath = path.join(root, relativePath);
+    assert.ok(fs.existsSync(pagePath), `Expected content scaffold: ${relativePath}`);
+    const page = read(relativePath);
+    assert.ok(page.includes(`title: ${title}`), `Expected title for ${relativePath}`);
+    assert.ok(!page.includes('noindex'));
+    assert.ok(!page.includes('本页内容正在准备中'));
+    assert.ok(!page.includes('## 你最终应该得到什么'));
+    assert.ok(!page.includes('## 先看你属于哪种情况'));
+    assert.ok(!page.includes('## 最短答案'));
+    assert.ok(page.includes('<link rel="canonical"'));
+    assert.ok(page.includes("'@type': 'TechArticle'"));
+    assert.ok(page.includes("inLanguage: 'zh-CN'"));
+    assert.ok(page.includes("name: 'Rainbond'"));
+    assert.ok(page.includes('mainEntityOfPage:'));
+    assert.ok(page.includes('isPartOf:'));
+    assert.ok(page.includes('about:'));
+    assert.ok(page.includes("image: 'https://www.rainbond.com/img/video/rainskills-ai-deploy-cover.jpg'"));
+    assert.ok(page.includes('](/rainskills)'));
+    headings.forEach(heading => assert.ok(page.includes(heading), `Expected ${heading} in ${relativePath}`));
+    assert.ok(page.length > 3000, `Expected substantive content in ${relativePath}`);
+  });
+
+  const sidebar = read('rainskillsSidebar.js');
+  let previousIndex = -1;
+  [
+    'claude-code-deploy-app',
+    'codex-deploy-app',
+    'ai-deployment-troubleshooting',
+    'vibe-coding-go-live',
+  ].forEach(id => {
+    const currentIndex = sidebar.indexOf(`id: '${id}'`);
+    assert.ok(currentIndex > previousIndex, `Expected sidebar order for ${id}`);
+    previousIndex = currentIndex;
+  });
+});
+
+test('uses a distinct keyword cluster for each search intent', () => {
+  const keywordPlans = [
+    ['rainskills/claude-code-deploy-app.mdx', ['Claude Code部署应用', 'Claude Code部署到服务器', 'Claude Code deployment skill', 'Claude Code部署项目']],
+    ['rainskills/codex-deploy-app.mdx', ['Codex部署应用', 'Codex部署项目', 'Codex deployment skill', 'Codex应用上线']],
+    ['rainskills/ai-deployment-troubleshooting.mdx', ['AI项目部署失败自动排查', 'AI部署自动排错', '应用构建失败', 'RainSkills排错']],
+    ['rainskills/vibe-coding-go-live.mdx', ['Vibe Coding项目如何上线', 'Vibe Coding项目部署', 'AI生成项目上线', 'Vibe Coding生产部署']],
+  ];
+
+  keywordPlans.forEach(([relativePath, keywords]) => {
+    const page = read(relativePath);
+    keywords.forEach(keyword => {
+      assert.ok(page.includes(`- ${keyword}`), `Expected ${keyword} in ${relativePath}`);
+    });
+  });
+});
+
+test('uses the main topic accordion style for every article FAQ', () => {
+  const faqComponentPath = path.join(root, 'src/components/Solutions/RainSkillsArticleFaq.tsx');
+  assert.ok(fs.existsSync(faqComponentPath), 'Expected the shared RainSkills article FAQ component.');
+  const faqComponent = read('src/components/Solutions/RainSkillsArticleFaq.tsx');
+  [
+    '<div className={styles.faqList}>',
+    '<details className={styles.faqItem}',
+    '<summary>{item.question}</summary>',
+    '<p>{item.answer}</p>',
+  ].forEach(copy => assert.ok(faqComponent.includes(copy), `Expected shared FAQ markup: ${copy}`));
+
+  [
+    'rainskills/claude-code-deploy-app.mdx',
+    'rainskills/codex-deploy-app.mdx',
+    'rainskills/ai-deployment-troubleshooting.mdx',
+    'rainskills/vibe-coding-go-live.mdx',
+  ].forEach(relativePath => {
+    const page = read(relativePath);
+    const faqSection = page.slice(page.indexOf('## 常见问题'), page.indexOf('## 相关内容'));
+
+    assert.ok(page.includes("import RainSkillsArticleFaq from '@site/src/components/Solutions/RainSkillsArticleFaq';"));
+    assert.ok(faqSection.includes('<RainSkillsArticleFaq'));
+    assert.strictEqual((faqSection.match(/question:/g) || []).length, 4);
+    assert.strictEqual((faqSection.match(/answer:/g) || []).length, 4);
+    assert.ok(!faqSection.includes('<details'));
+    assert.ok(!faqSection.includes('### '));
+  });
+});
+
+test('links all four search-intent articles from the main topic page', () => {
+  const source = read('src/components/Solutions/RainSkillsDeployment.tsx');
+  const styles = read('src/components/Solutions/rainskills-deployment.module.css');
+
+  [
+    '/rainskills/claude-code-deploy-app',
+    '/rainskills/codex-deploy-app',
+    '/rainskills/ai-deployment-troubleshooting',
+    '/rainskills/vibe-coding-go-live',
+    '按你的工具和问题继续阅读',
+    'className={styles.guideGrid}',
+    'className={styles.guideCard}',
+  ].forEach(copy => assert.ok(source.includes(copy), `Expected topic-page article link: ${copy}`));
+
+  ['.guideGrid', '.guideCard', '.guideCard:focus-visible'].forEach(token => {
+    assert.ok(styles.includes(token), `Expected guide-card style: ${token}`);
+  });
 });
 
 test('targets the requested RainSkills search intent from one canonical landing page', () => {

@@ -53,6 +53,29 @@ const agents = [
   },
 ];
 
+const guideCards = [
+  {
+    title: 'Claude Code部署应用',
+    description: '从当前项目开始，让 Claude Code 完成部署、排错和访问验证。',
+    href: '/rainskills/claude-code-deploy-app',
+  },
+  {
+    title: 'Codex部署应用',
+    description: '让 Codex 在写完代码后继续更新应用并给出交付结果。',
+    href: '/rainskills/codex-deploy-app',
+  },
+  {
+    title: 'AI项目部署失败自动排查',
+    description: '根据你看到的失败现象，逐层检查构建、运行、依赖和访问。',
+    href: '/rainskills/ai-deployment-troubleshooting',
+  },
+  {
+    title: 'Vibe Coding项目如何上线',
+    description: '把本地原型推进到有域名、数据持久化、验证和回滚的生产应用。',
+    href: '/rainskills/vibe-coding-go-live',
+  },
+];
+
 const workflowSteps = [
   {
     title: '读取当前项目',
@@ -267,6 +290,24 @@ export default function RainSkillsDeployment(): JSX.Element {
               <h3>{item.name}</h3>
               <p>{item.description}</p>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.sectionBlock}>
+        <div className={styles.sectionHead}>
+          <h2>按你的工具和问题继续阅读</h2>
+          <p>选择你正在使用的 AI Agent，或者直接从当前遇到的部署问题开始。</p>
+        </div>
+        <div className={styles.guideGrid}>
+          {guideCards.map((guide) => (
+            <Link className={styles.guideCard} to={guide.href} key={guide.href}>
+              <div>
+                <h3>{guide.title}</h3>
+                <p>{guide.description}</p>
+              </div>
+              <span aria-hidden="true">→</span>
+            </Link>
           ))}
         </div>
       </section>

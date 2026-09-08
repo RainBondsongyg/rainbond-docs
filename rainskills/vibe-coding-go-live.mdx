@@ -1,0 +1,292 @@
+---
+title: Vibe Coding项目如何上线：从本地原型到生产环境
+description: 将 Vibe Coding 生成的前端、后端、数据库和缓存项目部署到自己的服务器，补齐配置、存储、访问、验证和回滚能力。
+sidebar_position: 5
+keywords:
+  - Vibe Coding项目如何上线
+  - Vibe Coding部署
+  - Vibe Coding项目部署
+  - AI生成项目上线
+  - AI项目部署服务器
+  - Vibe Coding生产部署
+---
+
+import Head from '@docusaurus/Head';
+import RainSkillsArticleFaq from '@site/src/components/Solutions/RainSkillsArticleFaq';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'Vibe Coding项目如何上线：从本地原型到生产环境',
+  description: '把 AI 生成的本地原型部署成可访问、可升级、可排错和可回滚的生产应用。',
+  url: 'https://www.rainbond.com/rainskills/vibe-coding-go-live',
+  mainEntityOfPage: 'https://www.rainbond.com/rainskills/vibe-coding-go-live',
+  image: 'https://www.rainbond.com/img/video/rainskills-ai-deploy-cover.jpg',
+  keywords: ['Vibe Coding项目如何上线', 'Vibe Coding项目部署', 'AI生成项目上线', 'Vibe Coding生产部署'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'Thing', name: 'Vibe Coding 项目上线' },
+    { '@type': 'SoftwareApplication', name: 'RainSkills', url: 'https://github.com/goodrain/rainskills' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'RainSkills：AI Agent 部署应用', url: 'https://www.rainbond.com/rainskills' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/rainskills/vibe-coding-go-live" />
+  <meta property="og:title" content="Vibe Coding项目如何上线：从本地原型到生产环境" />
+  <meta property="og:description" content="把 AI 生成的本地原型部署成可访问、可升级、可排错和可回滚的生产应用。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# Vibe Coding项目如何上线：从本地原型到生产环境
+
+很多 Vibe Coding 项目都卡在同一个地方：页面在本地看起来已经完成，一换电脑或关闭开发终端就不能用了。此时缺的通常不是更多功能，而是一套可以重复构建、保存数据、对外访问和出现问题后恢复的运行方式。
+
+使用 RainSkills，可以让 Claude Code、Codex 等 AI Agent 带着对当前项目的理解继续完成部署、排错和交付验证，再由 Rainbond 持续管理应用运行。
+
+## 先判断项目能不能上线
+
+很多用户说“我要上线”，实际可能处在完全不同的阶段：
+
+| 你现在的项目状态 | 现在最应该做的事 |
+| --- | --- |
+| 只有页面截图或交互原型 | 先完成真实 API 和数据模型，不要开始部署生产 |
+| 本地开发服务器可以打开 | 固化依赖、生产构建、启动命令和环境变量 |
+| 前端和后端能在本地联调 | 列出数据库、缓存、上传文件和外部 API 依赖 |
+| 已经部署预览环境 | 验证核心用户路径、重启恢复、日志和数据持久化 |
+| 准备正式对外开放 | 补齐域名、HTTPS、备份、监控、容量和回滚方案 |
+| 已经上线但经常出问题 | 先进入[部署失败自动排查](/rainskills/ai-deployment-troubleshooting)，不要继续叠加功能 |
+
+如果项目还停留在第一或第二阶段，先解决可重复构建和真实数据问题。上线平台无法替代缺失的业务逻辑，也无法自动补齐所有生产设计。
+
+## 原型能运行，为什么还不能直接上线？
+
+本地开发环境通常隐藏了很多生产条件：
+
+- 前后端可能共享同一个终端和 `localhost`。
+- 数据库使用本地文件或临时容器，重启后数据可能丢失。
+- API Key、数据库密码直接放在 `.env` 或源码中。
+- 前端写死了开发服务器地址。
+- 没有健康检查、日志保留和异常恢复机制。
+- 只有开发启动命令，没有生产构建和启动方式。
+- 没有域名、HTTPS、备份和回滚计划。
+
+因此，上线不是把开发命令搬到服务器，而是把原型转换为边界清楚、配置外置、数据可保留、状态可观察的应用。
+
+## 上线前先画出真实应用结构
+
+让 AI Agent 先回答“这个项目由什么组成”，再开始部署：
+
+```text
+分析当前项目，列出所有运行组件、构建命令、启动命令、监听端口、依赖服务、环境变量和持久化目录。先不要部署。
+```
+
+一个常见的 Vibe Coding 全栈项目可能是：
+
+```text
+用户浏览器
+    ↓ HTTPS
+前端静态页面
+    ↓ /api
+后端 API
+    ├── MySQL / PostgreSQL
+    ├── Redis
+    └── 对象存储或本地上传目录
+```
+
+如果 AI 无法明确列出这些边界，项目还不适合直接进入生产部署。
+
+## Vibe Coding 项目上线流程
+
+### 1. 固化可重复的构建方式
+
+首先确认项目在一台干净环境中也能构建：
+
+- 依赖文件和锁文件已经提交。
+- 运行时版本明确，例如 Node.js、Python、Go 或 Java 版本。
+- 构建和启动命令写入标准配置，而不是只存在于聊天记录。
+- 前端使用生产构建，不使用开发服务器承载正式流量。
+- 本地测试和生产构建都能通过。
+
+可以让 Agent 执行：
+
+```text
+检查当前项目的生产构建方式，运行相关测试和构建。失败时先修复本地问题，不要开始部署。
+```
+
+### 2. 把敏感信息移出代码
+
+检查仓库中是否包含：
+
+- 数据库密码。
+- 第三方 API Key。
+- JWT 密钥。
+- 云服务访问凭据。
+- TLS 证书和私钥。
+- 生产环境账号或真实用户数据。
+
+这些信息应该通过受保护的环境变量或平台密钥能力配置，不能粘贴到提示词、提交到 Git 或写入公开部署文档。
+
+### 3. 把组件和依赖建模
+
+安装 RainSkills 后，让 Agent 建立明确应用拓扑：
+
+```text
+帮我安装 RainSkills，并连接到我要使用的 Rainbond。然后根据当前项目结构创建应用拓扑，先让我确认组件和依赖再部署。
+```
+
+组件拆分应遵循实际运行边界：
+
+| 对象 | 建议 |
+| --- | --- |
+| 前端 | 独立构建和发布，配置正确的 API 地址 |
+| 后端 API | 独立启动、扩缩容和查看日志 |
+| 异步任务 | 与 API 生命周期不同，应作为独立组件 |
+| 数据库 | 使用持久化存储，准备备份和恢复方式 |
+| Redis | 明确是缓存还是关键数据，决定持久化策略 |
+| 上传文件 | 使用持久化目录或对象存储，不写入临时容器目录 |
+
+### 4. 配置生产访问入口
+
+上线至少需要确认：
+
+- 应用监听 `0.0.0.0`，而不是只监听本机回环地址。
+- 组件端口与网关开放端口一致。
+- 前端 API 地址不再指向 `localhost`。
+- 域名解析到正确入口。
+- HTTPS 证书有效且自动续期策略明确。
+- 单页应用刷新路径可以正确回退到入口文件。
+- 跨域、Cookie 和回调地址使用生产域名。
+
+### 5. 部署并逐层排错
+
+```text
+部署当前项目。如果失败，按项目识别、源码构建、镜像与调度、进程启动、组件依赖和对外访问逐层检查，不要盲目重试。
+```
+
+更详细的排查方法见：[AI项目部署失败自动排查](/rainskills/ai-deployment-troubleshooting)。
+
+### 6. 验证真实用户路径
+
+交付验证不应只访问首页。至少检查一个完整用户路径，例如：
+
+```text
+打开首页 → 注册或登录 → 创建一条数据 → 刷新页面 → 再次读取数据
+```
+
+根据项目类型，还需要验证文件上传、搜索、支付回调、邮件发送、定时任务或第三方 API。无法自动验证的账号和业务操作应明确列为人工验收项。
+
+### 7. 准备更新与回滚
+
+第一次上线前就应该回答：
+
+- 新版本如何触发构建和部署？
+- 数据库结构变更失败如何处理？
+- 上一个可用版本在哪里？
+- 数据库和上传文件如何备份？
+- 回滚应用代码时，数据库是否仍然兼容？
+
+Rainbond 可以通过应用版本、快照和回滚流程持续管理交付，但数据库变更仍需要单独设计向前兼容和恢复方案。
+
+## 上线前检查清单
+
+### 代码与构建
+
+- [ ] 生产构建和相关测试通过。
+- [ ] 依赖版本和运行时版本明确。
+- [ ] 启动命令不依赖开发者电脑上的全局工具。
+- [ ] 仓库中没有密码、Token、证书或私钥。
+- [ ] 示例数据和调试接口不会进入生产环境。
+
+### 配置与依赖
+
+- [ ] 前端使用生产 API 地址。
+- [ ] 数据库和缓存通过组件依赖连接。
+- [ ] 非敏感配置与敏感配置分开管理。
+- [ ] 第三方回调地址已切换到生产域名。
+- [ ] 外部服务异常时有明确错误和重试边界。
+
+### 数据与存储
+
+- [ ] 数据库使用持久化存储。
+- [ ] 上传文件不会写入临时容器目录。
+- [ ] 已执行一次备份和恢复演练。
+- [ ] 数据库迁移可以重复执行或安全失败。
+- [ ] 删除和覆盖数据的操作需要确认。
+
+### 访问与运行
+
+- [ ] 域名和 HTTPS 正常。
+- [ ] 首页、核心 API 和关键用户路径通过。
+- [ ] 健康检查能够反映真实服务状态。
+- [ ] 日志中没有持续错误和敏感信息。
+- [ ] CPU、内存、磁盘和连接数满足预期负载。
+
+### 发布与回滚
+
+- [ ] 当前版本可以明确识别。
+- [ ] 上一个可用版本可以恢复。
+- [ ] 数据库变更与应用回滚兼容。
+- [ ] 发布失败时有负责人和处理路径。
+- [ ] 生产环境变更已经过明确确认。
+
+## 用 AI Agent 上线时，哪些事情必须由人决定？
+
+AI Agent 可以读取代码、分析配置、执行部署和验证，但以下决策不能依赖默认猜测：
+
+- 选择哪个生产环境、团队和应用。
+- 服务器容量、可用区和高可用要求。
+- 数据保留、备份周期和恢复目标。
+- 域名、证书和对外开放范围。
+- 生产密钥和第三方账号权限。
+- 是否接受停机、数据迁移或回滚风险。
+
+这些选择需要用户或团队明确批准，Agent 负责提供证据和执行已确认的方案。
+
+## 上线之后，至少要回答这几个问题
+
+Vibe Coding 项目真正上线后，你应该能够回答这些用户问题：
+
+- 用户从哪个正式域名进入？HTTPS 是否正常？
+- 新用户能否完成注册、登录和第一个核心操作？
+- 用户创建的数据在刷新、重启和重新部署后是否仍然存在？
+- 页面报错时，团队去哪里看日志和运行状态？
+- 新版本如何发布，发布失败如何恢复上一个版本？
+- 数据库和上传文件如何备份，谁负责恢复？
+- 第三方 API 不可用时，用户会看到什么提示？
+
+如果这些问题没有答案，即使首页已经能打开，项目仍然只是“部署了一个原型”，还没有完成可持续上线。
+
+## 常见问题
+
+<RainSkillsArticleFaq
+  items={[
+    {
+      question: 'Vibe Coding 项目一定要容器化吗？',
+      answer: '不一定需要手写 Dockerfile，但使用容器化运行可以减少环境差异。Rainbond 支持源码构建、Dockerfile、镜像等多种方式，应该根据项目现状选择最简单且可重复的路径。',
+    },
+    {
+      question: '本地 SQLite 可以直接用于生产吗？',
+      answer: '要看数据量、并发、备份和多实例需求。单实例轻量应用可能继续使用，但必须持久化数据库文件并准备备份；需要多实例、并发写入或高可用时，通常应评估独立数据库。',
+    },
+    {
+      question: 'AI 生成的项目上线前需要代码审查吗？',
+      answer: '需要。重点检查身份认证、权限、输入验证、文件上传、敏感信息、依赖安全和错误处理。AI 生成并不降低生产代码的安全和质量要求。',
+    },
+    {
+      question: '页面能打开是否代表上线完成？',
+      answer: '不代表。还要验证核心 API、数据库读写、刷新后的数据、文件存储、登录状态、域名证书以及重启后的恢复能力。',
+    },
+  ]}
+/>
+
+## 相关内容
+
+- 返回专题总览：[AI Agent 部署应用](/rainskills)
+- 使用 Claude Code 部署：[Claude Code部署应用](/rainskills/claude-code-deploy-app)
+- 使用 Codex 部署：[Codex部署应用](/rainskills/codex-deploy-app)
+- 排查上线问题：[AI项目部署失败自动排查](/rainskills/ai-deployment-troubleshooting)
+- 查看 RainSkills 源码：[GitHub](https://github.com/goodrain/rainskills)

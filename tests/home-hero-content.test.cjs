@@ -163,7 +163,7 @@ test('home hero removes the right-side Agent deployment demo without removing mo
     assert.ok(!heroSource.includes(copy), `Expected demo-only copy to be removed: ${copy}`);
   });
   assert.ok(heroSource.includes('帮我部署当前项目'), 'Expected the deploy prompt to remain in the Agent modal.');
-  assert.ok(!/CircleCheck|LoaderCircle|Sparkles/.test(heroSource), 'Expected demo-only icon imports and markup to be removed.');
+  assert.ok(!/LoaderCircle|Sparkles/.test(heroSource), 'Expected demo-only icon imports and markup to be removed.');
   assert.ok(!/\.agentDemo|@keyframes\s+agentDemo|@keyframes\s+slideInFromRight/.test(heroStyles), 'Expected demo-only CSS to be removed.');
 });
 
@@ -225,7 +225,7 @@ test('RainSkills Agent modal presents the approved concise prompt flow', () => {
     '部署应用',
     '安装完成后，继续在同一个对话中输入：',
     '帮我部署当前项目',
-    '需要平台时',
+    '没有平台时',
     '部署 Rainbond',
     '如果还没有 Rainbond，继续在同一个对话中输入：',
     '帮我部署 Rainbond',
@@ -243,6 +243,9 @@ test('RainSkills Agent modal presents the approved concise prompt flow', () => {
   assert.ok(!heroSource.includes('发送到 Codex 或 Claude Code 对话中'));
   assert.ok(!heroSource.includes('按 Agent 提示完成安装和连接'));
   assert.ok(/<span className=\{styles\.modalStageBadge\}>\s*接入后\s*<\/span>/.test(heroSource));
+  assert.ok(heroSource.includes('const [hasCopiedInstallPrompt, setHasCopiedInstallPrompt] = useState(false);'));
+  assert.ok(/<div className=\{styles\.modalPrimaryTitle\}>[\s\S]*<PlugZap[\s\S]*连接 AI Agent[\s\S]*<\/div>/.test(heroSource));
+  assert.ok(/\{hasCopiedInstallPrompt && \(\s*<div className=\{styles\.modalFollowUp\}/.test(heroSource));
   assert.ok(/className=\{styles\.modalNextStep\}/.test(heroSource));
   assert.strictEqual((heroSource.match(/onClick=\{\(\) => handleCopyPrompt\('(install|deploy|rainbond)'\)\}/g) || []).length, 3);
   assert.strictEqual((heroSource.match(/className=\{styles\.modalNextStep\}/g) || []).length, 2);
@@ -293,16 +296,16 @@ test('RainSkills Agent modal identifies every supported Agent with a lightweight
   assertCssProperty(listRule, 'width', '100%');
 
   const compatibilityRule = cssRule(heroStyles, '.agentCompatibility');
-  assert.ok(!/(?:^|;)\s*(?:border|background|padding)\s*:/.test(compatibilityRule));
+  assertCssProperty(compatibilityRule, 'background', 'var(--ifm-color-emphasis-100, #f8fafc)');
+  assertCssProperty(compatibilityRule, 'border-radius', '12px');
   const itemRule = cssRule(heroStyles, '.agentCompatibilityItem');
   assertCssProperty(itemRule, 'display', 'inline-flex');
   assert.ok(Number.parseFloat(cssProperty(itemRule, 'font-size')) >= 12);
-  assert.ok(!/(?:^|;)\s*(?:border|border-radius|background|padding)\s*:/.test(itemRule));
 
   const modalListRule = cssRule(heroStyles, '.agentCompatibility .agentCompatibilityList');
   assertCssProperty(modalListRule, 'display', 'grid');
   assertCssProperty(modalListRule, 'grid-template-columns', 'repeat(3, minmax(0, 1fr))');
-  assertCssProperty(modalListRule, 'gap', '0.75rem 1rem');
+  assertCssProperty(modalListRule, 'gap', '0.5rem');
   const modalItemRule = cssRule(heroStyles, '.agentCompatibility .agentCompatibilityItem');
   assertCssProperty(modalItemRule, 'gap', '0.4rem');
   assertCssProperty(modalItemRule, 'font-size', '12px');
@@ -347,6 +350,7 @@ test('RainSkills and Rainbond prompts copy independently with exact analytics pa
   const copiedBranch = balancedBlock(copyHandler, /if \(copied\) \{/, 'successful copy branch');
   assert.ok(
     /setCopyState\(\{ target, status: 'copied' \}\);/.test(copiedBranch)
+      && /if \(target === 'install'\) \{\s*setHasCopiedInstallPrompt\(true\);\s*\}/.test(copiedBranch)
       && /copyResetTimerRef\.current\s*=\s*window\.setTimeout\(\(\)\s*=>\s*setCopyState\(INITIAL_COPY_STATE\),\s*1800\);/.test(copiedBranch)
       && /else\s*\{\s*setCopyState\(\{ target, status: 'error' \}\);/.test(copyHandler),
     'Expected the selected prompt to own success, reset, and error state.'
@@ -363,19 +367,20 @@ test('RainSkills and Rainbond prompts copy independently with exact analytics pa
     'Expected the opened event and exact payload in the open handler.'
   );
   assert.ok(
-    /const closeAgentModal = \(\) => \{\s*clearCopyResetTimer\(\);\s*setCopyState\(INITIAL_COPY_STATE\);\s*setAgentModalOpen\(false\);/.test(heroSource),
+    /const closeAgentModal = \(\) => \{\s*clearCopyResetTimer\(\);\s*setCopyState\(INITIAL_COPY_STATE\);\s*setHasCopiedInstallPrompt\(false\);\s*setAgentModalOpen\(false\);/.test(heroSource),
     'Expected one close handler to clear copy state before hiding the modal.'
   );
   assert.ok(
     /const clearCopyResetTimer = \(\) => \{[\s\S]*window\.clearTimeout\(copyResetTimerRef\.current\);[\s\S]*copyResetTimerRef\.current = null;/.test(heroSource)
   );
   assert.ok(/const openAgentModal = \(\) => \{\s*clearCopyResetTimer\(\);\s*setCopyState\(INITIAL_COPY_STATE\);/.test(heroSource));
+  assert.strictEqual((heroSource.match(/setHasCopiedInstallPrompt\(false\);/g) || []).length, 2);
   assert.ok(/const handleCopyPrompt = \(target: CopyTarget\) => \{\s*clearCopyResetTimer\(\);/.test(heroSource));
 });
 
 test('RainSkills modal stays within the viewport and preserves accessible touch targets', () => {
   const modalRule = cssRule(heroStyles, '.agentModal');
-  assertCssProperty(modalRule, 'max-width', '600px');
+  assertCssProperty(modalRule, 'max-width', '648px');
   assert.ok(
     [cssProperty(modalRule, 'width'), cssProperty(modalRule, 'max-width')].includes('calc(100vw - 32px)'),
     'Expected the modal width to reserve 16px on each viewport edge.'
@@ -383,7 +388,7 @@ test('RainSkills modal stays within the viewport and preserves accessible touch 
 
   const modalDialogRule = cssRule(heroStyles, '.agentModal :global(.semi-modal)');
   assertCssProperty(modalDialogRule, 'width', 'calc(100vw - 32px)');
-  assertCssProperty(modalDialogRule, 'max-width', '600px');
+  assertCssProperty(modalDialogRule, 'max-width', '648px');
 
   const modalContentRule = cssRule(heroStyles, '.agentModal :global(.semi-modal-content)');
   assertCssProperty(modalContentRule, 'max-height', 'calc(100vh - 32px)');
@@ -391,7 +396,11 @@ test('RainSkills modal stays within the viewport and preserves accessible touch 
   assertCssProperty(modalContentRule, 'background', 'var(--ifm-background-surface-color, #fff)');
 
   assertCssProperty(cssRule(heroStyles, '.copyFeedback:empty'), 'margin', '0');
-  assertCssProperty(cssRule(heroStyles, '.modalNextStep'), 'border-top', '1px solid var(--ifm-color-emphasis-200, #e2e8f0)');
+  const primaryTitleRule = cssRule(heroStyles, '.modalPrimaryTitle');
+  assertCssProperty(primaryTitleRule, 'display', 'flex');
+  assertCssProperty(primaryTitleRule, 'align-items', 'center');
+  assertCssProperty(cssRule(heroStyles, '.modalFollowUp'), 'animation', 'modalFollowUpReveal 0.24s ease-out both');
+  assertCssProperty(cssRule(heroStyles, '.modalNextStep'), 'background', 'var(--ifm-background-surface-color, #fff)');
   assertCssProperty(cssRule(heroStyles, '.modalStageBadge'), 'color', 'var(--ifm-color-primary, #2563eb)');
   assertCssProperty(cssRule(heroStyles, '.copyPromptButtonSecondary'), 'background', 'var(--ifm-background-surface-color, #fff)');
 

@@ -1,0 +1,238 @@
+---
+title: Claude Code部署应用：用 RainSkills 部署到自己的服务器
+description: 使用 Claude Code 和 RainSkills 识别当前项目、创建应用拓扑、部署到自己的服务器或 Kubernetes，并完成失败排查和访问验证。
+sidebar_position: 2
+keywords:
+  - Claude Code部署应用
+  - Claude Code部署到服务器
+  - Claude Code deployment skill
+  - Claude Code部署Skill
+  - Claude Code部署项目
+  - Claude Code RainSkills
+---
+
+import Head from '@docusaurus/Head';
+import RainSkillsArticleFaq from '@site/src/components/Solutions/RainSkillsArticleFaq';
+
+export const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'Claude Code部署应用：用 RainSkills 部署到自己的服务器',
+  description: '使用 Claude Code 和 RainSkills 识别当前项目、部署应用、排查失败并验证访问结果。',
+  url: 'https://www.rainbond.com/rainskills/claude-code-deploy-app',
+  mainEntityOfPage: 'https://www.rainbond.com/rainskills/claude-code-deploy-app',
+  image: 'https://www.rainbond.com/img/video/rainskills-ai-deploy-cover.jpg',
+  keywords: ['Claude Code部署应用', 'Claude Code部署到服务器', 'Claude Code deployment skill', 'Claude Code部署项目'],
+  inLanguage: 'zh-CN',
+  about: [
+    { '@type': 'SoftwareApplication', name: 'Claude Code' },
+    { '@type': 'SoftwareApplication', name: 'RainSkills', url: 'https://github.com/goodrain/rainskills' },
+    { '@type': 'SoftwareApplication', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  ],
+  isPartOf: { '@type': 'WebSite', name: 'RainSkills：AI Agent 部署应用', url: 'https://www.rainbond.com/rainskills' },
+  author: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+  publisher: { '@type': 'Organization', name: 'Rainbond', url: 'https://www.rainbond.com' },
+};
+
+<Head>
+  <link rel="canonical" href="https://www.rainbond.com/rainskills/claude-code-deploy-app" />
+  <meta property="og:title" content="Claude Code部署应用：用 RainSkills 部署到自己的服务器" />
+  <meta property="og:description" content="让 Claude Code 从当前项目继续完成应用部署、失败排查和交付验证。" />
+  <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+</Head>
+
+# Claude Code部署应用：用 RainSkills 部署到自己的服务器
+
+## 先确认这次要部署什么
+
+如果项目就在当前目录，而且本地已经能启动，先别急着写 Dockerfile 或登录服务器。让 Claude Code 把前端、后端、数据库、端口和启动命令说清楚，确认没有认错项目，再开始部署。
+
+你可以直接在项目目录中告诉 Claude Code：
+
+```text
+帮我安装 RainSkills，并连接到我要使用的 Rainbond。
+```
+
+安装完成后继续输入：
+
+```text
+帮我部署当前项目。如果部署失败，继续检查构建日志、运行日志和访问配置，最后给我可访问地址。
+```
+
+部署过程中，Claude Code 需要继续检查构建和运行状态，直到拿到可以打开的地址。只返回“命令执行成功”，这件事还没有做完。
+
+### 常见的几种起点
+
+不用先研究所有部署概念，先找到最接近你当前状态的一行：
+
+| 你现在的情况 | 建议你先做什么 |
+| --- | --- |
+| 项目就在当前目录，本地已经能运行 | 让 Claude Code 识别项目，再直接发起 RainSkills 部署 |
+| 项目包含前端、后端和数据库 | 先让 Agent 列出组件与依赖，确认后再创建应用拓扑 |
+| 只有 Git 仓库地址，还没在本地运行 | 先确认分支、构建方式和必要配置，不要直接部署到生产 |
+| 已经有 Rainbond 应用，只想发布新代码 | 先核对本地项目绑定，运行测试后更新已有组件 |
+| 部署已经失败 | 不要重复点击部署，先进入[部署失败自动排查](/rainskills/ai-deployment-troubleshooting) |
+| 还没有 Rainbond | 先让安装器列出 Cloud、私有服务器或 Kubernetes 方案，由你选择目标环境 |
+
+如果你不确定属于哪一种，直接让 Claude Code “先分析、不要部署”。确认它理解的组件、端口和依赖正确后，再进入下一步。
+
+## 为什么 Claude Code 写完代码后，部署仍然容易卡住？
+
+Claude Code 能在当前目录中理解代码、编辑文件和执行开发命令。但一个真实应用上线时，还会遇到代码之外的问题：
+
+- 前端、后端、数据库和缓存应该拆成哪些组件？
+- 应用监听的端口是否和平台访问端口一致？
+- 数据库连接信息应该如何传递，密码应该保存在哪里？
+- 哪些目录需要持久化，重新部署后数据是否还在？
+- 构建成功以后，进程是否正常启动，健康检查是否通过？
+- 页面能打开时，API、静态资源和跨域配置是否正常？
+- 下一次更新如何发布，出现问题如何回滚？
+
+如果让 Agent 直接 SSH 到服务器，这些信息通常散落在命令、配置文件和当前对话中。RainSkills 将它们组织为 Rainbond 中的应用、组件、依赖、端口、存储和访问策略，让 Claude Code 可以持续读取真实运行状态。
+
+## Claude Code 部署应用前需要准备什么？
+
+开始前建议确认以下条件：
+
+1. **Claude Code 可以正常使用**：在项目目录中启动 Claude Code，并确认它可以读取当前仓库。安装与运行方式以 [Claude Code 官方文档](https://code.claude.com/docs/en/getting-started) 为准。
+2. **项目可以在本地构建**：至少知道启动命令、监听端口和必要环境变量。如果本地就无法构建，应先解决代码问题。
+3. **选择 Rainbond 环境**：可以使用 Rainbond Cloud、已有私有化 Rainbond，或在自己的服务器与 Kubernetes 中安装 Rainbond。
+4. **敏感配置单独准备**：数据库密码、API Key、证书和私钥不要写入仓库、提示词或公开文档。
+5. **明确交付目标**：只是预览、部署到测试环境，还是准备生产上线。不同目标对域名、证书、存储和资源要求不同。
+
+## Claude Code 部署应用的完整流程
+
+### 第一步：让 Claude Code 识别项目
+
+不要一开始就要求执行服务器命令。先让 Agent 说明它看到的项目结构：
+
+```text
+分析当前项目，列出前端、后端、数据库、缓存、启动命令、监听端口和必须配置的环境变量。先不要部署。
+```
+
+检查结果是否符合真实架构。如果项目包含多个服务，确认哪些服务需要独立扩缩容，哪些服务需要持久化数据。
+
+### 第二步：安装 RainSkills 并连接 Rainbond
+
+```text
+帮我安装 RainSkills，并连接到我要使用的 Rainbond。
+```
+
+连接过程中可能需要选择 Rainbond Cloud、已有私有环境或新安装环境。涉及平台安装、登录和授权时，Agent 应暂停并等待你确认，而不是替你选择目标环境。
+
+### 第三步：创建应用拓扑并部署
+
+```text
+把当前项目部署到 Rainbond。复用已有应用；如果还没有初始化，就先建立项目绑定，再创建所需组件和依赖。
+```
+
+RainSkills 会围绕当前项目完成这些工作：
+
+- 识别源码、镜像、软件包或 Compose 等输入方式。
+- 创建或复用 Rainbond 应用和组件。
+- 配置端口、组件依赖、连接变量和必要存储。
+- 触发构建与部署，并持续读取平台状态。
+
+### 第四步：失败时先定位层级
+
+如果部署没有成功，不要反复重新构建。可以继续问：
+
+```text
+判断当前失败发生在源码构建、镜像拉取、进程启动、组件依赖还是访问配置。给出证据后再决定下一步。
+```
+
+RainSkills 可以结合构建日志、运行日志、Pod 状态和平台事件区分问题来源。定位到业务代码或构建脚本时，应回到代码修改；定位到端口、依赖或访问配置时，再处理平台配置。
+
+### 第五步：验证交付结果
+
+```text
+验证应用是否已经交付成功。检查组件、Pod、事件、存储和访问路径，并给我最终访问地址。
+```
+
+完整验证至少应回答：
+
+- 所有必要组件是否处于正常状态？
+- 页面入口是否返回预期内容？
+- 页面调用的 API 是否正常？
+- 数据库与缓存依赖是否连通？
+- 重启或重新部署后，持久化数据是否保留？
+- 最终应该访问哪个域名或地址？
+
+## 全栈项目示例：React + Node.js + MySQL
+
+假设当前仓库包含 React 前端、Node.js API 和 MySQL。Claude Code 不应该把它们当成一个不透明的进程启动，而应先形成明确拓扑：
+
+```text
+浏览器 → React 前端 → Node.js API → MySQL
+```
+
+部署时重点检查：
+
+| 对象 | 需要确认的内容 |
+| --- | --- |
+| React 前端 | 构建命令、静态文件目录、API 地址、对外访问路径 |
+| Node.js API | 启动命令、监听地址、服务端口、健康检查 |
+| MySQL | 数据库名称、用户、密码、持久化目录、备份方式 |
+| 组件依赖 | 前端如何访问 API，API 如何通过内部地址连接 MySQL |
+| 交付结果 | 首页、核心 API、静态资源和数据库读写是否正常 |
+
+这样做的好处是：后端扩容、数据库持久化、前端更新和访问排错都可以独立处理，而不是重新执行一整套临时脚本。
+
+## 部署到自己的服务器，是否必须会 Kubernetes？
+
+不需要先掌握完整的 Kubernetes YAML。Rainbond 负责承载应用构建、组件编排、服务依赖、网关访问和运行状态，Claude Code 通过 RainSkills 使用这些应用级能力。
+
+但“不需要先会 Kubernetes”不等于可以忽略生产要求。生产环境仍然需要评估服务器资源、网络、域名、证书、存储、备份和高可用。RainSkills 可以帮助检查配置，但不会替团队决定容量和风险策略。
+
+## 怎么判断部署真的完成了
+
+完成后，你至少应该拿到这些结果：
+
+- 一个明确的应用名称和目标运行环境。
+- 前端、后端、数据库等组件的实际运行状态。
+- 可以由浏览器打开的访问地址。
+- 至少一个已经验证通过的页面和核心 API。
+- 数据库、缓存和持久化存储的连接结论。
+- 如果仍有问题，明确的阻塞原因和负责人，而不是无限重试。
+- 下一次修改代码时可以复用的部署和回滚路径。
+
+如果 Claude Code 只告诉你“容器已启动”，但没有访问地址和验证结果，这次任务还没有真正完成。
+
+## 安全边界
+
+- 不要在提示词、仓库或公开日志中粘贴密码、Token、证书和私钥。
+- 删除应用、删除组件、修改业务代码和安装平台等高风险操作需要明确确认。
+- Agent 没有足够证据时，不应通过反复重启掩盖真实问题。
+- 生产发布前应保留可回滚版本，并验证数据库备份。
+- 如果问题来自服务器容量、网络策略或第三方服务，应明确停止自动重试并交给对应负责人。
+
+## 常见问题
+
+<RainSkillsArticleFaq
+  items={[
+    {
+      question: 'Claude Code deployment skill 是什么？',
+      answer: '在这个场景中，deployment skill 指安装在 Claude Code 中的 RainSkills。它提供面向 Rainbond 的项目接入、部署、排错和交付验证流程，让 Agent 知道应该读取哪些状态、何时继续以及何时请求确认。',
+    },
+    {
+      question: 'Claude Code 能直接部署 Git 仓库吗？',
+      answer: '可以从当前仓库或明确的 Git 仓库开始，但仍要确认分支、构建方式、端口、依赖和敏感配置。对于当前本地项目，优先在项目目录中发起任务，可以减少绑定错误。',
+    },
+    {
+      question: '部署成功为什么页面仍然打不开？',
+      answer: '常见原因包括应用只监听 127.0.0.1、端口识别错误、网关路径不匹配、前端 API 地址错误、证书或域名未生效。此时应验证页面与 API 路径，而不是只看组件是否“运行中”。',
+    },
+    {
+      question: '后续修改代码如何重新部署？',
+      answer: '继续在同一个项目中让 Claude Code 修改代码、运行测试，然后要求 RainSkills 重新构建并验证。生产环境建议先创建快照或保留上一个可用版本。',
+    },
+  ]}
+/>
+
+## 相关内容
+
+- 了解整体能力：[AI Agent 部署应用](/rainskills)
+- 使用其他编码 Agent：[Codex部署应用](/rainskills/codex-deploy-app)
+- 部署失败时：[AI项目部署失败自动排查](/rainskills/ai-deployment-troubleshooting)
+- 从原型进入生产：[Vibe Coding项目如何上线](/rainskills/vibe-coding-go-live)
+- 查看开源实现：[RainSkills GitHub](https://github.com/goodrain/rainskills)
